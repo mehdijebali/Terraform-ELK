@@ -7,7 +7,7 @@ provider "aws" {
 }
 
 variable "AMI_ID" {
-    default = ami-0b0ea68c435eb488d
+    default = "ami-0b0ea68c435eb488d"
 }
 
 variable "PATH_TO_PUBLIC_KEY" {

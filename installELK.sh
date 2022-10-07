@@ -15,7 +15,8 @@ sudo apt-get install elasticsearch -y
 sleep 10
 sudo mv /tmp/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 
-sudo service elasticsearch start
+sudo systemctl start elasticsearch.service
+#sudo service elasticsearch start
 sudo curl http://localhost:9200
 
 # install logstash

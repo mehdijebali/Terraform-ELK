@@ -63,7 +63,7 @@ resource "aws_instance" "MyFirstInstnace" {
   depends_on = [aws_security_group.allow_elk]
   
   tags = {
-    Name = "custom_instance"
+    Name = "ELK Server"
   }
 
   provisioner "file" {
