@@ -22,3 +22,11 @@ variable "PATH_TO_PRIVATE_KEY" {
 variable "INSTANCE_USERNAME" {
   default = "ubuntu"
 }
+
+variable "INSTANCE_TYPE" {
+  default = "m4.large"
+}
+
+variable "AVAILABILITY_ZONE" {
+  default = "us-east-1a"
+}
