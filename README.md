@@ -36,5 +36,5 @@ terraform plan
 terraform apply
 ```
 ## Expected Results
-After the provisionning is done, we can verify the ELK server deployment by copying the `public_IP:5601` to the browser. You should find a webpage similar to the following:
+After the provisionning is done, we can verify the ELK server deployment by copying `public_IP:5601` to the browser. You should find a webpage similar to the following:
 ![](./Lab_Results/elk-webpage.png)
