@@ -1,9 +1,9 @@
 variable "AWS_REGION" {
-default = "us-east-1"
+  default = "us-east-1"
 }
 
 variable "AMI_ID" {
-    default = "ami-0b0ea68c435eb488d"
+  default = "ami-0b0ea68c435eb488d"
 }
 
 variable "PATH_TO_PUBLIC_KEY" {
@@ -27,13 +27,13 @@ variable "AVAILABILITY_ZONE" {
 }
 
 variable "SG_NAMES" {
-  type = list
+  type    = list(any)
   default = ["allow-levelup-ssh", "allow_elk"]
 }
 
 variable "SG_DESCRIPTIONS" {
-  type = list
-  default = ["security group that allows ssh connection","Elasticsearch traffic"]
+  type    = list(any)
+  default = ["security group that allows ssh connection", "Elasticsearch traffic"]
 }
 
 variable "INSTANCE_NAME" {

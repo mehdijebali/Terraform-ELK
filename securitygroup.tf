@@ -33,7 +33,7 @@ resource "aws_security_group" "allow_elk" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   tags = {
     Name = "${var.SG_NAMES[1]}"
   }
