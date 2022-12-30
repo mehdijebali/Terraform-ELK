@@ -25,3 +25,17 @@ variable "INSTANCE_TYPE" {
 variable "AVAILABILITY_ZONE" {
   default = "us-east-1a"
 }
+
+variable "SG_NAMES" {
+  type = list
+  default = ["allow-levelup-ssh", "allow_elk"]
+}
+
+variable "SG_DESCRIPTIONS" {
+  type = list
+  default = ["security group that allows ssh connection","Elasticsearch traffic"]
+}
+
+variable "INSTANCE_NAME" {
+  default = "ELK Server"
+}

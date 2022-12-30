@@ -1,6 +1,6 @@
 resource "aws_security_group" "allow_elk" {
-  name        = "allow_elk"
-  description = "Elasticsearch traffic"
+  name        = var.SG_NAMES[1]
+  description = var.SG_DESCRIPTIONS[1]
 
   # elasticsearch port
   ingress {
@@ -33,4 +33,9 @@ resource "aws_security_group" "allow_elk" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  
+  tags = {
+    Name = "${var.SG_NAMES[1]}"
+  }
+
 }
