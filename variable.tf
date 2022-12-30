@@ -1,9 +1,5 @@
 variable "AWS_REGION" {
-default = "ap-south-1"
-}
-
-provider "aws" {
-  region     = "us-east-1"
+default = "us-east-1"
 }
 
 variable "AMI_ID" {
@@ -11,7 +7,6 @@ variable "AMI_ID" {
 }
 
 variable "PATH_TO_PUBLIC_KEY" {
-  description = "Public key path"
   default = "levelup_key.pub"
 }
 
