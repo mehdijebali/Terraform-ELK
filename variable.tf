@@ -39,3 +39,7 @@ variable "SG_DESCRIPTIONS" {
 variable "INSTANCE_NAME" {
   default = "ELK Server"
 }
+
+variable "KEY_NAME" {
+  default = "tf-ssh-key"
+}

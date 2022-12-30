@@ -8,3 +8,4 @@ variable "AMI_ID" {}
 variable "INSTANCE_TYPE" {}
 variable "INSTANCE_NAME" {}
 variable "VPC_SECURITY_GROUP_IDS" {}
+variable "INSTANCE_USERNAME" {}
