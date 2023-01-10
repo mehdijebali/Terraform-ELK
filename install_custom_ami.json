@@ -43,7 +43,7 @@
         },
         {
             "type": "shell",
-            "script": "./install_nginx.sh",
+            "script": "./installELK.sh",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "pause_before": "10s"
         }
