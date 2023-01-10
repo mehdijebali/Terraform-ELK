@@ -10,6 +10,16 @@ resource "aws_eip" "ip" {
   instance = module.instance.instance_id
 }
 
+data "aws_ami" "packer_ami" {
+  most_recent      = true
+  owners           = ["self"]
+
+  filter {
+    name   = "name"
+    values = ["custom-packer-*"]
+  }
+}
+
 module "instance" {
   source = "./modules/instance"
 
@@ -20,7 +30,7 @@ module "instance" {
   SG_VPC_ID              = data.aws_vpc.default.id
   SG_NAME                = var.SG_NAMES[0]
   SG_DESCRIPTION         = var.SG_DESCRIPTIONS[0]
-  AMI_ID                 = var.AMI_ID
+  AMI_ID                 = data.aws_ami.packer_ami.id
   INSTANCE_TYPE          = var.INSTANCE_TYPE
   INSTANCE_NAME          = var.INSTANCE_NAME
   INSTANCE_USERNAME      = var.INSTANCE_USERNAME
