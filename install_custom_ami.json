@@ -20,7 +20,7 @@
                 ],
                 "most_recent": true
             },
-            "instance_type": "t2.micro",
+            "instance_type": "m4.large",
             "ssh_username": "ubuntu",
             "ami_name": "custom-packer-{{timestamp}}"
         }
