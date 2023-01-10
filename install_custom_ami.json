@@ -27,6 +27,21 @@
     ],
     "provisioners": [
         {
+            "type": "file",
+            "source": "elasticsearch.yml",
+            "destination": "/tmp/elasticsearch.yml"
+        },
+        {
+            "type": "file",
+            "source": "kibana.yml",
+            "destination": "/tmp/kibana.yml"
+        },
+        {
+            "type": "file",
+            "source": "apache-01.conf",
+            "destination": "/tmp/apache-01.conf"
+        },
+        {
             "type": "shell",
             "script": "./install_nginx.sh",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
