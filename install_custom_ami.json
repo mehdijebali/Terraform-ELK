@@ -12,16 +12,14 @@
             "source_ami_filter": {
                 "filters": {
                     "virtualization-type": "hvm",
-                    "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
+                    "name": "amzn2-ami-hvm-2.0.*-gp2",
                     "root-device-type": "ebs"
                 },
-                "owners": [
-                    "099720109477"
-                ],
+                "owners": ["amazon"],
                 "most_recent": true
             },
             "instance_type": "m4.large",
-            "ssh_username": "ubuntu",
+            "ssh_username": "ec2-user",
             "ami_name": "custom-packer-{{timestamp}}"
         }
     ],
