@@ -15,7 +15,7 @@ sudo apt-get install elasticsearch -y
 sleep 10
 sudo mv /tmp/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 
-sudo systemctl start elasticsearch.service
+sudo systemctl enable elasticsearch.service
 #sudo service elasticsearch start
 sudo curl http://localhost:9200
 
@@ -28,14 +28,15 @@ sudo apt-get install kibana
 sleep 10
 
 sudo mv /tmp/kibana.yml /etc/kibana/kibana.yml
-sudo service kibana start
-
+#sudo service kibana start
+sudo systemctl enable kibana
 # install filebeats
 sudo apt-get install metricbeat
 sleep 10
-sudo service metricbeat start
-
+#sudo service metricbeat start
+sudo systemctl enable metricbeat
 # Start LogStash
 sudo mv /tmp/apache-01.conf /etc/logstash/conf.d/apache-01.conf
 sleep 10
-sudo service logstash start
+#sudo service logstash start
+sudo systemctl enable logstash
