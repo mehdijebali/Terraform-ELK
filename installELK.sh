@@ -1,8 +1,7 @@
 #!/bin/bash
 
-sudo apt update
-sudo apt-get upgrade -y
-sudo apt-get install default-jre -y
+sudo yum update
+sudo yum install java-1.8.0 -y
 sudo java -version
 
 # install elasticsearch
