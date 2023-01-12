@@ -5,12 +5,12 @@ sudo yum install java-1.8.0 -y
 sudo java -version
 
 # install elasticsearch
-wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
-echo "deb https://artifacts.elastic.co/packages/oss-7.x/apt stable main" | sudo tee -a /etc/apt/sources.list.d/elastic-7.x.list
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm.sha512
 
-sudo apt-get update
-sudo apt-get install elasticsearch -y
+sha512sum -c elasticsearch-7.15.2-x86_64.rpm.sha512
+
+sudo rpm --install elasticsearch-7.15.2-x86_64.rpm
 sleep 10
 sudo mv /tmp/elasticsearch.yml /etc/elasticsearch/elasticsearch.yml
 sudo systemctl enable elasticsearch.service
