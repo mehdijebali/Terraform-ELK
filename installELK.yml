@@ -75,7 +75,15 @@
       name: logstash
       state: started
       enabled: yes
+
+  - name: Install filebeat
+    yum:
+      name: filebeat
+      state: present
+      update_cache: yes
   
+  - name: Enable filebeat
+    shell: sudo filebeat modules enable system
 
 
   
