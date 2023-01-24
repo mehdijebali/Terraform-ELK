@@ -59,5 +59,24 @@
       state: started
       enabled: yes
 
+  - name: Install kibana
+    yum:
+      name: kibana
+      state: present
+      update_cache: yes
+
+  - name: Copy kibana config file
+    copy:
+      src: ./kibana.yml
+      dest: /etc/kibana/kibana.yml
+
+  - name: Enable kibana service at startup
+    service:
+      name: logstash
+      state: started
+      enabled: yes
+  
+
+
   
   
