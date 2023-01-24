@@ -17,5 +17,29 @@
 
   - name: Import elasticsearch rpm key
     rpm_key:
-    state: present
-    key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+      state: present
+      key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  
+  - name: Copy elasticsearch repo file
+    copy:
+      src: ./elasticsearch.repo
+      dest: /etc/yum.repos.d/elasticsearch.repo
+
+  - name: Install Elasticsearch
+    yum:
+      name: elasticsearch
+      state: present
+      update_cache: yes
+
+  - name: Copy elasticsearch config file
+    copy:
+      src: ./elasticsearch.yml
+      dest: /etc/elasticsearch/elasticsearch.yml
+  
+  - name: Enable Elasticsearch service at startup
+    service:
+      name: elasticsearch
+      state: started
+      enabled: yes
+  
+  
