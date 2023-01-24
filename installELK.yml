@@ -42,4 +42,22 @@
       state: started
       enabled: yes
   
+  - name: Install Logstash
+    yum:
+      name: logstash
+      state: present
+      update_cache: yes
+
+  - name: Copy apache config file
+    copy:
+      src: ./apache-01.conf
+      dest: /etc/logstash/conf.d/apache-01.conf
+
+  - name: Enable Logstash service at startup
+    service:
+      name: logstash
+      state: started
+      enabled: yes
+
+  
   
