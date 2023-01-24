@@ -3,8 +3,14 @@
   become: true
 
   tasks:
-    - name: Update all packages
-      yum:
-        name: '*'
-        state: latest
-        update_only: yes
+  - name: Update all packages
+    yum:
+      name: '*'
+      state: latest
+      update_only: yes
+    
+  - name: Install Java 
+  yum:
+    name: java-1.8.0
+    state: present
+    update_cache: yes
