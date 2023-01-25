@@ -38,9 +38,10 @@
   
   - name: Enable Elasticsearch service at startup
     service:
-      name: elasticsearch
+      name: elasticsearch.service
       state: started
       enabled: yes
+      ignore_errors: true
   
   - name: Install Logstash
     yum:
