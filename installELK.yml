@@ -41,6 +41,7 @@
       name: elasticsearch
       state: started
       enabled: yes
+    ignore_errors: true
   
   - name: Install Logstash
     yum:
