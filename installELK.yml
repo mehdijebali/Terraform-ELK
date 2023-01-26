@@ -28,7 +28,7 @@
   - name: Install Elasticsearch
     yum:
       name: elasticsearch
-      state: present
+      state: latest
       update_cache: yes
 
   - name: Copy elasticsearch config file
@@ -41,7 +41,7 @@
       name: elasticsearch
       state: started
       enabled: yes
-    ignore_errors: true
+    # ignore_errors: true
   
   - name: Install Logstash
     yum:
