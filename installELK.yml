@@ -15,21 +15,18 @@
       state: present
       update_cache: yes
 
-  - name: Import elasticsearch rpm key
-    rpm_key:
-      state: present
-      key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+  - name: Download Elasticsearch RPM
+    get_url:
+      url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm
+      dest: /tmp/elasticsearch-7.15.2-x86_64.rpm
   
-  - name: Copy elasticsearch repo file
-    copy:
-      src: ./elasticsearch.repo
-      dest: /etc/yum.repos.d/elasticsearch.repo
+  - name: Download Elasticsearch RPM
+    get_url:
+      url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm.sha512
+      dest: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
 
   - name: Install Elasticsearch
-    yum:
-      name: elasticsearch
-      state: latest
-      update_cache: yes
+    shell: sudo rpm --install elasticsearch-7.15.2-x86_64.rpm
 
   - name: Copy elasticsearch config file
     copy:
