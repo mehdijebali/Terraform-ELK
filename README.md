@@ -1,5 +1,5 @@
 # Provision ELK Instance with Terraform
-In this demo, we will deploy an ELK server in AWS using EC2 instance based on the following diagram: 
+In this demo, we will deploy ELK stack in AWS using EC2 instance based on AMI image created by **Packer** and configure by **ansible**. The following diagram describes the implemented infrastructure in AWS: 
 ![](./Lab_Results/ELK.png)
 ## About ELK
 ELK stands for **Elasticsearch**, **Logstash**, and **Kibana**, each of these tools are Open-Source and can be used Independently. They provide a solution to the common problem, ie eﬃciently store, search and visualize large text files or logs. This will help us to debug Issurs in production. 
