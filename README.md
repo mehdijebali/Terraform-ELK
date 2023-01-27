@@ -1,5 +1,5 @@
 # Provision ELK Instance with Terraform
-In this demo, we will deploy ELK stack in AWS using EC2 instance based on AMI image created by **Packer** and configure by **ansible**. The following diagram describes the implemented infrastructure in AWS: 
+In this demo, we will deploy ELK stack in AWS using EC2 instance based on AMI image created by **Packer** and configured by **ansible**. The following diagram describes the implemented infrastructure in AWS: 
 ![](./Lab_Results/ELK.png)
 ## About ELK
 ELK stands for **Elasticsearch**, **Logstash**, and **Kibana**, each of these tools are Open-Source and can be used Independently. They provide a solution to the common problem, ie eﬃciently store, search and visualize large text files or logs. This will help us to debug Issurs in production. 
@@ -24,7 +24,15 @@ export AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
 export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 export AWS_DEFAULT_REGION=us-west-2
 ```
-4. In the project root directory, initiate Terraform in order to install the declared provider in `provider.tf` file
+4. Validate Packer configuration file syntax
+```
+packer validate install_custom_ami.json
+```
+5. Once the validation is succeeded, you can build the custom image
+```
+packer build install_custom_ami.json
+```
+6. In the project root directory, initiate Terraform in order to install the declared provider in `main.tf` file
 ```
 terraform init
 ```
