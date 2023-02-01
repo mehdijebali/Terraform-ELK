@@ -103,12 +103,6 @@
       state: started
       enabled: yes
   
-  - name: Check elasticsearch service status
-    service_facts:
-    register: elastic_state
-  - debug:
-      var: elastic_state.ansible_facts.services['elasticsearch.service']
-  
   - name: Install Logstash
     yum:
       name: logstash
@@ -119,6 +113,13 @@
     copy:
       src: ./apache-01.conf
       dest: /etc/logstash/conf.d/apache-01.conf
+
+  - name: Check apache config file location
+    stat:
+      path: /etc/logstash/conf.d/apache-01.conf
+    register: apache
+  - debug:
+      var: apache.stat.exists
 
   - name: Enable Logstash service at startup
     service:
@@ -151,6 +152,14 @@
   
   - name: Enable filebeat
     shell: sudo filebeat modules enable system
+
+  - name: Check ELK services status
+    service_facts:
+    register: elk_state
+  - debug:
+      var: elk_state.ansible_facts.services['elasticsearch.service']
+  - debug:
+      var: elk_state.ansible_facts.services['logstash.service']
 
 
   
