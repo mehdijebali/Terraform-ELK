@@ -14,6 +14,12 @@
       name: java-1.8.0
       state: present
       update_cache: yes
+
+  - name: Check Java version 
+    command: sudo java --version
+    register: java_version
+  - debug:
+      var: java_version.stderr
   
   - name: Import elasticsearch rpm key
     rpm_key:
@@ -24,6 +30,13 @@
     copy:
       src: ./elasticsearch.repo
       dest: /etc/yum.repos.d/elasticsearch.repo
+
+  - name: Check file elasticsearch repo location
+    stat:
+      path: /etc/yum.repos.d/elasticsearch.repo
+    register: result
+  - debug:
+      var: result.stat.exists
 
   - name: Download Elasticsearch RPM
     get_url:
@@ -43,6 +56,16 @@
       src: ./elasticsearch.yml
       dest: /etc/elasticsearch/elasticsearch.yml
   
+  - name: "Ensure elasticsearch network host is localhost"
+    lineinfile:
+      name: /etc/elasticsearch/elasticsearch.yml
+      line: "network.host: 127.0.0.1"
+      state: present
+    check_mode: yes
+    register: conf
+  - debug:
+      var: conf
+
   - name: Enable Elasticsearch service at startup
     service:
       name: elasticsearch
