@@ -73,9 +73,9 @@
   - name: Check elasticsearch config file location
     stat:
       path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
-    register: sha
+    register: elastic
   - debug:
-      var: sha.stat.exists
+      var: elastic.stat.exists
   
   - name: "Ensure elasticsearch network host is localhost"
     lineinfile:
@@ -153,7 +153,7 @@
     check_mode: yes
     register: server_host
   - debug:
-      var: serverhost.failed  
+      var: server_host.failed  
 
   - name: "Ensure kibana server port is 5601"
     lineinfile:
