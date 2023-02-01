@@ -16,7 +16,7 @@
       update_cache: yes
 
   - name: Check Java version 
-    command: sudo java --version
+    command: sudo java -version
     register: java_version
   - debug:
       var: java_version.stderr
@@ -34,19 +34,33 @@
   - name: Check file elasticsearch repo location
     stat:
       path: /etc/yum.repos.d/elasticsearch.repo
-    register: result
+    register: repo
   - debug:
-      var: result.stat.exists
+      var: repo.stat.exists
 
   - name: Download Elasticsearch RPM
     get_url:
       url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm
       dest: /tmp/elasticsearch-7.15.2-x86_64.rpm
+
+  - name: Check elasticsearch RPM file location 
+    stat:
+      path: /tmp/elasticsearch-7.15.2-x86_64.rpm
+    register: rpm
+  - debug:
+      var: rpm.stat.exists
   
   - name: Download Elasticsearch SHA Key
     get_url:
       url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm.sha512
       dest: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
+
+  - name: Check elasticsearch SHA Key location
+    stat:
+      path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
+    register: sha
+  - debug:
+      var: sha.stat.exists
 
   - name: Install Elasticsearch
     shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
@@ -56,21 +70,44 @@
       src: ./elasticsearch.yml
       dest: /etc/elasticsearch/elasticsearch.yml
   
+  - name: Check elasticsearch config file location
+    stat:
+      path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
+    register: sha
+  - debug:
+      var: sha.stat.exists
+  
   - name: "Ensure elasticsearch network host is localhost"
     lineinfile:
       name: /etc/elasticsearch/elasticsearch.yml
       line: "network.host: 127.0.0.1"
       state: present
     check_mode: yes
-    register: conf
+    register: host
   - debug:
-      var: conf
+      var: host.failed  
+
+  - name: "Ensure elasticsearch http port is 9200"
+    lineinfile:
+      name: /etc/elasticsearch/elasticsearch.yml
+      line: "http.port: 9200"
+      state: present
+    check_mode: yes
+    register: port
+  - debug:
+      var: port.failed 
 
   - name: Enable Elasticsearch service at startup
     service:
       name: elasticsearch
       state: started
       enabled: yes
+  
+  - name: Check elasticsearch service status
+    service_facts:
+    register: elastic_state
+  - debug:
+      var: elastic_state.ansible_facts.services['elasticsearch.service']
   
   - name: Install Logstash
     yum:
