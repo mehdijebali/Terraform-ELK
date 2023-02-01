@@ -138,6 +138,33 @@
       src: ./kibana.yml
       dest: /etc/kibana/kibana.yml
 
+  - name: Check kibana config file location
+    stat:
+      path: /etc/kibana/kibana.yml
+    register: kibana
+  - debug:
+      var: kibana.stat.exists
+
+  - name: "Ensure elasticsearch host is configured"
+    lineinfile:
+      name: /etc/kibana/kibana.yml
+      line: "http://localhost:9200"
+      state: present
+    check_mode: yes
+    register: server_host
+  - debug:
+      var: serverhost.failed  
+
+  - name: "Ensure kibana server port is 5601"
+    lineinfile:
+      name: /etc/kibana/kibana.yml
+      line: "server.port: 5601"
+      state: present
+    check_mode: yes
+    register: server_port
+  - debug:
+      var: server_port.failed 
+
   - name: Enable kibana service at startup
     service:
       name: kibana
@@ -160,7 +187,8 @@
       var: elk_state.ansible_facts.services['elasticsearch.service']
   - debug:
       var: elk_state.ansible_facts.services['logstash.service']
-
+  - debug:
+      var: elk_state.ansible_facts.services['kibana.service']
 
   
   
