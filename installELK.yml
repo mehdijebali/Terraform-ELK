@@ -72,7 +72,7 @@
   
   - name: Check elasticsearch config file location
     stat:
-      path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
+      path: /etc/elasticsearch/elasticsearch.yml
     register: elastic
   - debug:
       var: elastic.stat.exists
