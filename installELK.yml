@@ -158,9 +158,6 @@
       name: filebeat
       state: present
       update_cache: yes
-  
-  - name: Enable filebeat
-    shell: sudo filebeat modules enable system
 
   - name: Check ELK services status
     service_facts:
@@ -205,4 +202,7 @@
     service:
       name: kibana
       state: restarted
+  
+  - name: Enable filebeat
+    shell: sudo filebeat modules enable system
       
