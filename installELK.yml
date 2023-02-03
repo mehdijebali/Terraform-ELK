@@ -153,12 +153,6 @@
   - debug:
       var: server_port.failed 
 
-  - name: Enable kibana service at startup
-    service:
-      name: kibana
-      state: started
-      enabled: yes
-
   - name: Install filebeat
     yum:
       name: filebeat
@@ -201,8 +195,14 @@
       name: logstash
       state: restarted
   
+  - name: Enable kibana service at startup
+    service:
+      name: kibana
+      state: started
+      enabled: yes
 
-
-
-  
-  
+  - name: Restart kibana service at startup
+    service:
+      name: kibana
+      state: restarted
+      
