@@ -64,11 +64,15 @@
 
   - name: Install Elasticsearch
     shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
+    notify:
+      - Enable Elasticsearch service at startup
 
   - name: Copy elasticsearch config file
     copy:
       src: ./elasticsearch.yml
       dest: /etc/elasticsearch/elasticsearch.yml
+    notify:
+      - Restart Elasticsearch service
   
   - name: Check elasticsearch config file location
     stat:
@@ -102,11 +106,15 @@
       name: logstash
       state: present
       update_cache: yes
+    notify:
+      - Enable Logstash service at startup
 
   - name: Copy apache config file
     copy:
       src: ./apache-01.conf
       dest: /etc/logstash/conf.d/apache-01.conf
+    notify:
+      - Restart Logstash service
 
   - name: Check apache config file location
     stat:
@@ -120,11 +128,15 @@
       name: kibana
       state: present
       update_cache: yes
+    notify:
+      - Enable Kibana service at startup
 
   - name: Copy kibana config file
     copy:
       src: ./kibana.yml
       dest: /etc/kibana/kibana.yml
+    notify:
+      - Restart Kibana service
 
   - name: Check kibana config file location
     stat:
@@ -158,6 +170,8 @@
       name: filebeat
       state: present
       update_cache: yes
+    notify:
+      - Enable filebeat
 
   - name: Check ELK services status
     service_facts:
@@ -192,13 +206,13 @@
       name: logstash
       state: restarted
   
-  - name: Enable kibana service at startup
+  - name: Enable Kibana service at startup
     service:
       name: kibana
       state: started
       enabled: yes
 
-  - name: Restart kibana service at startup
+  - name: Restart Kibana service
     service:
       name: kibana
       state: restarted
