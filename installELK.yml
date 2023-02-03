@@ -115,12 +115,6 @@
   - debug:
       var: apache.stat.exists
 
-  - name: Enable Logstash service at startup
-    service:
-      name: logstash
-      state: started
-      enabled: yes
-
   - name: Install kibana
     yum:
       name: kibana
@@ -196,7 +190,19 @@
       name: elasticsearch
       state: restarted
 
+  - name: Enable Logstash service at startup
+    service:
+      name: logstash
+      state: started
+      enabled: yes
+
+  - name: Restart Logstash service
+    service:
+      name: logstash
+      state: restarted
   
+
+
 
   
   
