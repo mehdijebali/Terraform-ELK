@@ -96,12 +96,6 @@
     register: port
   - debug:
       var: port.failed 
-
-  - name: Enable Elasticsearch service at startup
-    service:
-      name: elasticsearch
-      state: started
-      enabled: yes
   
   - name: Install Logstash
     yum:
@@ -189,6 +183,20 @@
       var: elk_state.ansible_facts.services['logstash.service']
   - debug:
       var: elk_state.ansible_facts.services['kibana.service']
+  
+  handlers:
+  - name: Enable Elasticsearch service at startup
+    service:
+      name: elasticsearch
+      state: started
+      enabled: yes
+
+  - name: Restart Elasticsearch service
+    service:
+      name: elasticsearch
+      state: restarted
+
+  
 
   
   
