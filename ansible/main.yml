@@ -97,7 +97,7 @@
   - debug:
       var: elastic.stat.exists
   
-  - name: "Ensure elasticsearch network host is localhost"
+  - name: Ensure elasticsearch network host is localhost
     lineinfile:
       name: /etc/elasticsearch/elasticsearch.yml
       line: "network.host: 127.0.0.1"
@@ -107,7 +107,7 @@
   - debug:
       var: host.failed  
 
-  - name: "Ensure elasticsearch http port is 9200"
+  - name: Ensure elasticsearch http port is 9200
     lineinfile:
       name: /etc/elasticsearch/elasticsearch.yml
       line: "http.port: 9200"
@@ -117,11 +117,12 @@
   - debug:
       var: port.failed 
   
-  - name: Install Logstash
+  - name: Install Logstash (centos)
     yum:
       name: logstash
       state: present
       update_cache: yes
+    when: linux_distribution == "centos"
     notify:
       - Enable Logstash service at startup
 
@@ -139,11 +140,12 @@
   - debug:
       var: apache.stat.exists
 
-  - name: Install kibana
+  - name: Install kibana (centos)
     yum:
       name: kibana
       state: present
       update_cache: yes
+    when: linux_distribution == "centos"
     notify:
       - Enable Kibana service at startup
 
@@ -161,7 +163,7 @@
   - debug:
       var: kibana.stat.exists
 
-  - name: "Ensure elasticsearch host is configured"
+  - name: Ensure elasticsearch host is configured
     lineinfile:
       name: /etc/kibana/kibana.yml
       line: "http://localhost:9200"
