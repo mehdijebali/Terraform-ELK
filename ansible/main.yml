@@ -6,17 +6,19 @@
     linux_distribution: centos
 
   tasks:
-  - name: Update all packages
+  - name: Update all packages (centos)
     yum:
       name: '*'
       state: latest
       update_only: yes
+    when: linux_distribution == "centos"
     
-  - name: Install Java 
+  - name: Install Java (centos)
     yum:
       name: java-1.8.0
       state: present
       update_cache: yes
+    when: linux_distribution == "centos"
 
   - name: Check Java version 
     command: sudo java -version
