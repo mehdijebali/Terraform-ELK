@@ -26,49 +26,60 @@
   - debug:
       var: java_version.stderr
   
-  - name: Import elasticsearch rpm key
+  - name: Import elasticsearch rpm key (centos)
     rpm_key:
       state: present
       key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    when: linux_distribution == "centos"
   
-  - name: Copy elasticsearch repo file
+  - name: Copy elasticsearch repo file (centos)
     copy:
       src: ./elasticsearch.repo
       dest: /etc/yum.repos.d/elasticsearch.repo
+    when: linux_distribution == "centos"
 
-  - name: Check file elasticsearch repo location
+  - name: Check file elasticsearch repo location (centos)
     stat:
       path: /etc/yum.repos.d/elasticsearch.repo
     register: repo
+    when: linux_distribution == "centos"
   - debug:
       var: repo.stat.exists
+    when: linux_distribution == "centos"
 
-  - name: Download Elasticsearch RPM
+  - name: Download Elasticsearch RPM (centos)
     get_url:
       url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm
       dest: /tmp/elasticsearch-7.15.2-x86_64.rpm
+    when: linux_distribution == "centos"
 
-  - name: Check elasticsearch RPM file location 
+  - name: Check elasticsearch RPM file location (centos)
     stat:
       path: /tmp/elasticsearch-7.15.2-x86_64.rpm
     register: rpm
+    when: linux_distribution == "centos"
   - debug:
       var: rpm.stat.exists
+    when: linux_distribution == "centos"
   
-  - name: Download Elasticsearch SHA Key
+  - name: Download Elasticsearch SHA Key (centos)
     get_url:
       url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm.sha512
       dest: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
+    when: linux_distribution == "centos"
 
-  - name: Check elasticsearch SHA Key location
+  - name: Check elasticsearch SHA Key location (centos)
     stat:
       path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
     register: sha
+    when: linux_distribution == "centos"
   - debug:
       var: sha.stat.exists
+    when: linux_distribution == "centos"
 
-  - name: Install Elasticsearch
+  - name: Install Elasticsearch (centos)
     shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
+    when: linux_distribution == "centos"
     notify:
       - Enable Elasticsearch service at startup
 
