@@ -183,11 +183,12 @@
   - debug:
       var: server_port.failed 
 
-  - name: Install filebeat
+  - name: Install filebeat (centos)
     yum:
       name: filebeat
       state: present
       update_cache: yes
+    when: linux_distribution == "centos"
     notify:
       - Enable filebeat
 
