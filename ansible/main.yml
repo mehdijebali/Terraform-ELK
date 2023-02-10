@@ -2,18 +2,23 @@
 - hosts: all
   become: true
 
+  vars:
+    linux_distribution: centos
+
   tasks:
-  - name: Update all packages
+  - name: Update all packages (centos)
     yum:
       name: '*'
       state: latest
       update_only: yes
+    when: linux_distribution == "centos"
     
-  - name: Install Java 
+  - name: Install Java (centos)
     yum:
       name: java-1.8.0
       state: present
       update_cache: yes
+    when: linux_distribution == "centos"
 
   - name: Check Java version 
     command: sudo java -version
@@ -21,49 +26,60 @@
   - debug:
       var: java_version.stderr
   
-  - name: Import elasticsearch rpm key
+  - name: Import elasticsearch rpm key (centos)
     rpm_key:
       state: present
       key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+    when: linux_distribution == "centos"
   
-  - name: Copy elasticsearch repo file
+  - name: Copy elasticsearch repo file (centos)
     copy:
       src: ./elasticsearch.repo
       dest: /etc/yum.repos.d/elasticsearch.repo
+    when: linux_distribution == "centos"
 
-  - name: Check file elasticsearch repo location
+  - name: Check file elasticsearch repo location (centos)
     stat:
       path: /etc/yum.repos.d/elasticsearch.repo
     register: repo
+    when: linux_distribution == "centos"
   - debug:
       var: repo.stat.exists
+    when: linux_distribution == "centos"
 
-  - name: Download Elasticsearch RPM
+  - name: Download Elasticsearch RPM (centos)
     get_url:
       url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm
       dest: /tmp/elasticsearch-7.15.2-x86_64.rpm
+    when: linux_distribution == "centos"
 
-  - name: Check elasticsearch RPM file location 
+  - name: Check elasticsearch RPM file location (centos)
     stat:
       path: /tmp/elasticsearch-7.15.2-x86_64.rpm
     register: rpm
+    when: linux_distribution == "centos"
   - debug:
       var: rpm.stat.exists
+    when: linux_distribution == "centos"
   
-  - name: Download Elasticsearch SHA Key
+  - name: Download Elasticsearch SHA Key (centos)
     get_url:
       url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm.sha512
       dest: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
+    when: linux_distribution == "centos"
 
-  - name: Check elasticsearch SHA Key location
+  - name: Check elasticsearch SHA Key location (centos)
     stat:
       path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
     register: sha
+    when: linux_distribution == "centos"
   - debug:
       var: sha.stat.exists
+    when: linux_distribution == "centos"
 
-  - name: Install Elasticsearch
+  - name: Install Elasticsearch (centos)
     shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
+    when: linux_distribution == "centos"
     notify:
       - Enable Elasticsearch service at startup
 
@@ -81,7 +97,7 @@
   - debug:
       var: elastic.stat.exists
   
-  - name: "Ensure elasticsearch network host is localhost"
+  - name: Ensure elasticsearch network host is localhost
     lineinfile:
       name: /etc/elasticsearch/elasticsearch.yml
       line: "network.host: 127.0.0.1"
@@ -91,7 +107,7 @@
   - debug:
       var: host.failed  
 
-  - name: "Ensure elasticsearch http port is 9200"
+  - name: Ensure elasticsearch http port is 9200
     lineinfile:
       name: /etc/elasticsearch/elasticsearch.yml
       line: "http.port: 9200"
@@ -101,11 +117,12 @@
   - debug:
       var: port.failed 
   
-  - name: Install Logstash
+  - name: Install Logstash (centos)
     yum:
       name: logstash
       state: present
       update_cache: yes
+    when: linux_distribution == "centos"
     notify:
       - Enable Logstash service at startup
 
@@ -123,11 +140,12 @@
   - debug:
       var: apache.stat.exists
 
-  - name: Install kibana
+  - name: Install kibana (centos)
     yum:
       name: kibana
       state: present
       update_cache: yes
+    when: linux_distribution == "centos"
     notify:
       - Enable Kibana service at startup
 
@@ -145,7 +163,7 @@
   - debug:
       var: kibana.stat.exists
 
-  - name: "Ensure elasticsearch host is configured"
+  - name: Ensure elasticsearch host is configured
     lineinfile:
       name: /etc/kibana/kibana.yml
       line: "http://localhost:9200"
@@ -155,7 +173,7 @@
   - debug:
       var: server_host.failed  
 
-  - name: "Ensure kibana server port is 5601"
+  - name: Ensure kibana server port is 5601
     lineinfile:
       name: /etc/kibana/kibana.yml
       line: "server.port: 5601"
@@ -165,11 +183,12 @@
   - debug:
       var: server_port.failed 
 
-  - name: Install filebeat
+  - name: Install filebeat (centos)
     yum:
       name: filebeat
       state: present
       update_cache: yes
+    when: linux_distribution == "centos"
     notify:
       - Enable filebeat
 
