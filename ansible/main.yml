@@ -173,7 +173,7 @@
   - debug:
       var: server_host.failed  
 
-  - name: "Ensure kibana server port is 5601"
+  - name: Ensure kibana server port is 5601
     lineinfile:
       name: /etc/kibana/kibana.yml
       line: "server.port: 5601"
