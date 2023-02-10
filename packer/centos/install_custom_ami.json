@@ -12,36 +12,38 @@
             "source_ami_filter": {
                 "filters": {
                     "virtualization-type": "hvm",
-                    "name": "amzn2-ami-hvm-2.0.*-gp2",
+                    "name": "ubuntu/images/*ubuntu-xenial-16.04-amd64-server-*",
                     "root-device-type": "ebs"
                 },
-                "owners": ["amazon"],
+                "owners": [
+                    "099720109477"
+                ],
                 "most_recent": true
             },
             "instance_type": "m4.large",
-            "ssh_username": "ec2-user",
+            "ssh_username": "ubuntu",
             "ami_name": "custom-packer-{{timestamp}}"
         }
     ],
     "provisioners": [
         {
             "type": "file",
-            "source": "elasticsearch.yml",
+            "source": "./packer/config/elasticsearch.yml",
             "destination": "/tmp/elasticsearch.yml"
         },
         {
             "type": "file",
-            "source": "kibana.yml",
+            "source": "./packer/config/kibana.yml",
             "destination": "/tmp/kibana.yml"
         },
         {
             "type": "file",
-            "source": "apache-01.conf",
+            "source": "./packer/config/apache-01.conf",
             "destination": "/tmp/apache-01.conf"
         },
         {
             "type": "shell",
-            "script": "./installELK.sh",
+            "script": "./packer/centos/installELK.sh",
             "execute_command": "{{ .Vars }} sudo -E sh '{{ .Path }}'",
             "pause_before": "10s"
         }
