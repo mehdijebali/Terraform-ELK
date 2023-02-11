@@ -101,6 +101,23 @@
       var: sha.stat.exists
     when: linux_distribution == "centos"
 
+  - name: Import Elasticsearch PGP Key (ubuntu)
+    shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+    when: linux_distribution == "ubuntu"
+
+  - name: Add repository definition (ubuntu)
+    copy:
+      dest: /etc/apt/sources.list.d/elastic-7.x.list
+      content: |
+        deb https://artifacts.elastic.co/packages/7.x/apt stable main
+    when: linux_distribution == "ubuntu"
+  
+  - name: update cache and ignore errors in case of problems (ubuntu)
+    apt: 
+      update_cache: yes
+    ignore_errors: yes
+    when: linux_distribution == "ubuntu"
+
   #####################################################################
   #                      Install Elasticsearch
   #####################################################################  
