@@ -6,6 +6,9 @@
     linux_distribution: centos
 
   tasks:
+  #####################################################################
+  #                      Install Java
+  #####################################################################                      
   - name: Update all packages (centos)
     yum:
       name: '*'
@@ -26,6 +29,9 @@
   - debug:
       var: java_version.stderr
   
+  #####################################################################
+  #                      Import Elastic package
+  #####################################################################  
   - name: Import elasticsearch rpm key (centos)
     rpm_key:
       state: present
@@ -77,6 +83,9 @@
       var: sha.stat.exists
     when: linux_distribution == "centos"
 
+  #####################################################################
+  #                      Install Elasticsearch
+  #####################################################################  
   - name: Install Elasticsearch (centos)
     shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
     when: linux_distribution == "centos"
@@ -116,7 +125,9 @@
     register: port
   - debug:
       var: port.failed 
-  
+  #####################################################################
+  #                      Install Logstash
+  #####################################################################  
   - name: Install Logstash (centos)
     yum:
       name: logstash
@@ -139,7 +150,9 @@
     register: apache
   - debug:
       var: apache.stat.exists
-
+  #####################################################################
+  #                      Install Kibana
+  #####################################################################  
   - name: Install kibana (centos)
     yum:
       name: kibana
@@ -183,6 +196,9 @@
   - debug:
       var: server_port.failed 
 
+  #####################################################################
+  #                      Install filebeat
+  #####################################################################  
   - name: Install filebeat (centos)
     yum:
       name: filebeat
