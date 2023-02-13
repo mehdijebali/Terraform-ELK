@@ -6,6 +6,9 @@
     linux_distribution: centos
 
   tasks:
+  #####################################################################
+  #                      Install Java
+  #####################################################################                      
   - name: Update all packages (centos)
     yum:
       name: '*'
@@ -19,6 +22,24 @@
       state: present
       update_cache: yes
     when: linux_distribution == "centos"
+  
+  - name: Update apt repo and cache on Ubuntu box (ubuntu)
+    apt:
+      update_cache: yes
+      force_apt_get: yes
+    when: linux_distribution == "ubuntu"
+
+  - name: Upgrade all packages on servers (ubuntu)
+    apt:
+      upgrade: dist
+      force_apt_get: yes
+    when: linux_distribution == "ubuntu"
+
+  - name: Install java (ubuntu)
+    apt:
+      name: openjdk-8-jdk
+      state: present
+    when: linux_distribution == "ubuntu"
 
   - name: Check Java version 
     command: sudo java -version
@@ -26,6 +47,9 @@
   - debug:
       var: java_version.stderr
   
+  #####################################################################
+  #                      Import Elastic package
+  #####################################################################  
   - name: Import elasticsearch rpm key (centos)
     rpm_key:
       state: present
@@ -77,9 +101,38 @@
       var: sha.stat.exists
     when: linux_distribution == "centos"
 
+  - name: Import Elasticsearch PGP Key (ubuntu)
+    shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+    when: linux_distribution == "ubuntu"
+
+  - name: Add repository definition (ubuntu)
+    copy:
+      dest: /etc/apt/sources.list.d/elastic-7.x.list
+      content: |
+        deb https://artifacts.elastic.co/packages/7.x/apt stable main
+    when: linux_distribution == "ubuntu"
+  
+  - name: update cache and ignore errors in case of problems (ubuntu)
+    apt: 
+      update_cache: yes
+    ignore_errors: yes
+    when: linux_distribution == "ubuntu"
+
+  #####################################################################
+  #                      Install Elasticsearch
+  #####################################################################  
   - name: Install Elasticsearch (centos)
     shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
     when: linux_distribution == "centos"
+    notify:
+      - Enable Elasticsearch service at startup
+    
+  - name: Install Elasticsearch (ubuntu)
+    apt:
+      name: elasticsearch
+      state: present
+      update_cache: yes
+    when: linux_distribution == "ubuntu"
     notify:
       - Enable Elasticsearch service at startup
 
@@ -116,13 +169,23 @@
     register: port
   - debug:
       var: port.failed 
-  
+  #####################################################################
+  #                      Install Logstash
+  #####################################################################  
   - name: Install Logstash (centos)
     yum:
       name: logstash
       state: present
       update_cache: yes
     when: linux_distribution == "centos"
+    notify:
+      - Enable Logstash service at startup
+
+  - name: Install Logstash (ubuntu)
+    apt:
+      name: logstash
+      state: present
+    when: linux_distribution == "ubuntu"
     notify:
       - Enable Logstash service at startup
 
@@ -139,13 +202,23 @@
     register: apache
   - debug:
       var: apache.stat.exists
-
+  #####################################################################
+  #                      Install Kibana
+  #####################################################################  
   - name: Install kibana (centos)
     yum:
       name: kibana
       state: present
       update_cache: yes
     when: linux_distribution == "centos"
+    notify:
+      - Enable Kibana service at startup
+  
+  - name: Install kibana (ubuntu)
+    apt:
+      name: kibana
+      state: present
+    when: linux_distribution == "ubuntu"
     notify:
       - Enable Kibana service at startup
 
@@ -183,6 +256,9 @@
   - debug:
       var: server_port.failed 
 
+  #####################################################################
+  #                      Install filebeat
+  #####################################################################  
   - name: Install filebeat (centos)
     yum:
       name: filebeat
@@ -191,7 +267,19 @@
     when: linux_distribution == "centos"
     notify:
       - Enable filebeat
-
+  
+  - name: Install metricbeat (ubuntu)
+    apt:
+      name: metricbeat
+      state: present
+    when: linux_distribution == "ubuntu"
+    notify:
+      - Enable metricbeat service at startup
+  
+  #####################################################################
+  #                      Check Services status
+  ##################################################################### 
+  
   - name: Check ELK services status
     service_facts:
     register: elk_state
@@ -202,6 +290,9 @@
   - debug:
       var: elk_state.ansible_facts.services['kibana.service']
   
+  #####################################################################
+  #                      Handlers
+  ##################################################################### 
   handlers:
   - name: Enable Elasticsearch service at startup
     service:
@@ -238,4 +329,10 @@
   
   - name: Enable filebeat
     shell: sudo filebeat modules enable system
+
+  - name: Enable metricbeat service at startup
+    service:
+      name: metricbeat
+      state: started
+      enabled: yes
       
