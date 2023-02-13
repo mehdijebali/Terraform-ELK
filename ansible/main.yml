@@ -181,6 +181,14 @@
     notify:
       - Enable Logstash service at startup
 
+  - name: Install Logstash (ubuntu)
+    apt:
+      name: logstash
+      state: present
+    when: linux_distribution == "ubuntu"
+    notify:
+      - Enable Logstash service at startup
+
   - name: Copy apache config file
     copy:
       src: ./apache-01.conf
