@@ -275,7 +275,11 @@
     when: linux_distribution == "ubuntu"
     notify:
       - Enable metricbeat service at startup
-
+  
+  #####################################################################
+  #                      Check Services status
+  ##################################################################### 
+  
   - name: Check ELK services status
     service_facts:
     register: elk_state
@@ -286,6 +290,9 @@
   - debug:
       var: elk_state.ansible_facts.services['kibana.service']
   
+  #####################################################################
+  #                      Handlers
+  ##################################################################### 
   handlers:
   - name: Enable Elasticsearch service at startup
     service:
@@ -322,4 +329,10 @@
   
   - name: Enable filebeat
     shell: sudo filebeat modules enable system
+
+  - name: Enable metricbeat service at startup
+    service:
+      name: metricbeat
+      state: started
+      enabled: yes
       
