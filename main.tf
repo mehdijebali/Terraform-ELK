@@ -16,7 +16,7 @@ data "aws_ami" "packer_ami" {
 
   filter {
     name   = "name"
-    values = ["custom-packer-*"]
+    values = [var.LD_NAME == "centos" ? "centos-elk-pkr-*" : "ubuntu-elk-pkr-*"]
   }
 }
 
