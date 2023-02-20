@@ -3,7 +3,7 @@
   become: true
 
   vars:
-    linux_distribution: centos
+    linux_distribution: ubuntu
 
   tasks:
   #####################################################################
