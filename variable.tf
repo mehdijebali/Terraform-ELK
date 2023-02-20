@@ -43,3 +43,7 @@ variable "INSTANCE_NAME" {
 variable "KEY_NAME" {
   default = "tf-ssh-key"
 }
+
+variable "LD_NAME" {
+  default = "centos"
+}

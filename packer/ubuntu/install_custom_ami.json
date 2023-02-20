@@ -22,7 +22,7 @@
             },
             "instance_type": "m4.large",
             "ssh_username": "ubuntu",
-            "ami_name": "custom-packer-{{timestamp}}"
+            "ami_name": "ubuntu-elk-pkr-{{timestamp}}"
         }
     ],
     "provisioners": [
