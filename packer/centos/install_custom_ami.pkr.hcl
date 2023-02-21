@@ -7,7 +7,6 @@ data "amazon-ami" "centos" {
   most_recent = true
   owners      = ["amazon"]
   region      = "us-east-1"
-  secret_key  = "${var.aws_secret_key}"
 }
 
 source "amazon-ebs" "centos" {
