@@ -10,10 +10,8 @@ data "amazon-ami" "ubuntu" {
   region      = "us-east-1"
 }
 
-locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
-
 source "amazon-ebs" "ubuntu" {
-  ami_name      = "ubuntu-elk-pkr-${local.timestamp}"
+  ami_name      = "ubuntu-elk-pkr-${formatdate("YYYY-MM-DD-hhmmss", timestamp())}"
   instance_type = "m4.large"
   region        = "us-east-1"
   source_ami    = "${data.amazon-ami.ubuntu.id}"
