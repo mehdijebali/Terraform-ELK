@@ -11,7 +11,7 @@ data "amazon-ami" "centos" {
 }
 
 source "amazon-ebs" "centos" {
-  ami_name      = "centos-elk-pkr-${local.timestamp}"
+  ami_name      = "centos-elk-pkr-${formatdate("YYYY-MM-DD-hhmmss", timestamp())}"
   instance_type = "m4.large"
   region        = "us-east-1"
   source_ami    = "${data.amazon-ami.centos.id}"
