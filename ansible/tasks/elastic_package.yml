@@ -24,7 +24,7 @@
   when: linux_distribution == "centos"
 
 - name: Import Elasticsearch PGP Key (ubuntu)
-  shell: wget -qO - {{elastic.rpm_key}}" | sudo apt-key add -
+  shell: wget -qO - {{elastic.rpm_key}} | sudo apt-key add -
   when: linux_distribution == "ubuntu"
 
 - name: Add repository definition (ubuntu)
