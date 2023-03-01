@@ -16,7 +16,7 @@
 
 - name: Copy elasticsearch config file
   copy:
-    src: ./elasticsearch.yml
+    src: ./files/elasticsearch.yml
     dest: /etc/elasticsearch/elasticsearch.yml
   notify:
     - Restart Elasticsearch service
