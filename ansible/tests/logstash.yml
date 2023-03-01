@@ -1,0 +1,7 @@
+---
+- name: Check apache config file location
+  stat:
+    path: /etc/logstash/conf.d/apache-01.conf
+  register: apache
+- debug:
+    var: apache.stat.exists

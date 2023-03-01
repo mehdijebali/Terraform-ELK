@@ -1,0 +1,27 @@
+---
+- name: Check elasticsearch config file location
+  stat:
+    path: /etc/elasticsearch/elasticsearch.yml
+  register: elastic
+- debug:
+    var: elastic.stat.exists
+  
+- name: Ensure elasticsearch network host is localhost
+  lineinfile:
+    name: /etc/elasticsearch/elasticsearch.yml
+    line: "network.host: 127.0.0.1"
+    state: present
+  check_mode: yes
+  register: host
+- debug:
+    var: host.failed  
+
+- name: Ensure elasticsearch http port is 9200
+  lineinfile:
+    name: /etc/elasticsearch/elasticsearch.yml
+    line: "http.port: 9200"
+    state: present
+  check_mode: yes
+  register: port
+- debug:
+    var: port.failed 

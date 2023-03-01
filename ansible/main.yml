@@ -1,294 +1,52 @@
 ---
-- hosts: all
+- name: Deploy ELK stack
+  hosts: all
   become: true
 
-  vars:
-    linux_distribution: centos
-
   tasks:
+  - include_vars: ./vars/main.yml
+  
   #####################################################################
   #                      Install Java
   #####################################################################                      
-  - name: Update all packages (centos)
-    yum:
-      name: '*'
-      state: latest
-      update_only: yes
-    when: linux_distribution == "centos"
-    
-  - name: Install Java (centos)
-    yum:
-      name: java-1.8.0
-      state: present
-      update_cache: yes
-    when: linux_distribution == "centos"
-  
-  - name: Update apt repo and cache on Ubuntu box (ubuntu)
-    apt:
-      update_cache: yes
-      force_apt_get: yes
-    when: linux_distribution == "ubuntu"
-
-  - name: Upgrade all packages on servers (ubuntu)
-    apt:
-      upgrade: dist
-      force_apt_get: yes
-    when: linux_distribution == "ubuntu"
-
-  - name: Install java (ubuntu)
-    apt:
-      name: openjdk-8-jdk
-      state: present
-    when: linux_distribution == "ubuntu"
-
-  - name: Check Java version 
-    command: sudo java -version
-    register: java_version
-  - debug:
-      var: java_version.stderr
+  - include_tasks: ./tasks/java.yml
+  - include_tasks: ./tests/java.yml
   
   #####################################################################
   #                      Import Elastic package
   #####################################################################  
-  - name: Import elasticsearch rpm key (centos)
-    rpm_key:
-      state: present
-      key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
-    when: linux_distribution == "centos"
+  - include_tasks: ./tasks/elastic_package.yml
+  - include_tasks: ./tests/elastic_package.yml  
   
-  - name: Copy elasticsearch repo file (centos)
-    copy:
-      src: ./elasticsearch.repo
-      dest: /etc/yum.repos.d/elasticsearch.repo
-    when: linux_distribution == "centos"
-
-  - name: Check file elasticsearch repo location (centos)
-    stat:
-      path: /etc/yum.repos.d/elasticsearch.repo
-    register: repo
-    when: linux_distribution == "centos"
-  - debug:
-      var: repo.stat.exists
-    when: linux_distribution == "centos"
-
-  - name: Download Elasticsearch RPM (centos)
-    get_url:
-      url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm
-      dest: /tmp/elasticsearch-7.15.2-x86_64.rpm
-    when: linux_distribution == "centos"
-
-  - name: Check elasticsearch RPM file location (centos)
-    stat:
-      path: /tmp/elasticsearch-7.15.2-x86_64.rpm
-    register: rpm
-    when: linux_distribution == "centos"
-  - debug:
-      var: rpm.stat.exists
-    when: linux_distribution == "centos"
-  
-  - name: Download Elasticsearch SHA Key (centos)
-    get_url:
-      url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.15.2-x86_64.rpm.sha512
-      dest: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
-    when: linux_distribution == "centos"
-
-  - name: Check elasticsearch SHA Key location (centos)
-    stat:
-      path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
-    register: sha
-    when: linux_distribution == "centos"
-  - debug:
-      var: sha.stat.exists
-    when: linux_distribution == "centos"
-
-  - name: Import Elasticsearch PGP Key (ubuntu)
-    shell: wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
-    when: linux_distribution == "ubuntu"
-
-  - name: Add repository definition (ubuntu)
-    copy:
-      dest: /etc/apt/sources.list.d/elastic-7.x.list
-      content: |
-        deb https://artifacts.elastic.co/packages/7.x/apt stable main
-    when: linux_distribution == "ubuntu"
-  
-  - name: update cache and ignore errors in case of problems (ubuntu)
-    apt: 
-      update_cache: yes
-    ignore_errors: yes
-    when: linux_distribution == "ubuntu"
-
   #####################################################################
   #                      Install Elasticsearch
   #####################################################################  
-  - name: Install Elasticsearch (centos)
-    shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
-    when: linux_distribution == "centos"
-    notify:
-      - Enable Elasticsearch service at startup
-    
-  - name: Install Elasticsearch (ubuntu)
-    apt:
-      name: elasticsearch
-      state: present
-      update_cache: yes
-    when: linux_distribution == "ubuntu"
-    notify:
-      - Enable Elasticsearch service at startup
-
-  - name: Copy elasticsearch config file
-    copy:
-      src: ./elasticsearch.yml
-      dest: /etc/elasticsearch/elasticsearch.yml
-    notify:
-      - Restart Elasticsearch service
+  - include_tasks: ./tasks/elasticsearch.yml
+  - include_tasks: ./tests/elasticsearch.yml    
   
-  - name: Check elasticsearch config file location
-    stat:
-      path: /etc/elasticsearch/elasticsearch.yml
-    register: elastic
-  - debug:
-      var: elastic.stat.exists
-  
-  - name: Ensure elasticsearch network host is localhost
-    lineinfile:
-      name: /etc/elasticsearch/elasticsearch.yml
-      line: "network.host: 127.0.0.1"
-      state: present
-    check_mode: yes
-    register: host
-  - debug:
-      var: host.failed  
-
-  - name: Ensure elasticsearch http port is 9200
-    lineinfile:
-      name: /etc/elasticsearch/elasticsearch.yml
-      line: "http.port: 9200"
-      state: present
-    check_mode: yes
-    register: port
-  - debug:
-      var: port.failed 
   #####################################################################
   #                      Install Logstash
   #####################################################################  
-  - name: Install Logstash (centos)
-    yum:
-      name: logstash
-      state: present
-      update_cache: yes
-    when: linux_distribution == "centos"
-    notify:
-      - Enable Logstash service at startup
+  - include_tasks: ./tasks/logstash.yml
+  - include_tasks: ./tests/logstash.yml    
 
-  - name: Install Logstash (ubuntu)
-    apt:
-      name: logstash
-      state: present
-    when: linux_distribution == "ubuntu"
-    notify:
-      - Enable Logstash service at startup
-
-  - name: Copy apache config file
-    copy:
-      src: ./apache-01.conf
-      dest: /etc/logstash/conf.d/apache-01.conf
-    notify:
-      - Restart Logstash service
-
-  - name: Check apache config file location
-    stat:
-      path: /etc/logstash/conf.d/apache-01.conf
-    register: apache
-  - debug:
-      var: apache.stat.exists
   #####################################################################
   #                      Install Kibana
   #####################################################################  
-  - name: Install kibana (centos)
-    yum:
-      name: kibana
-      state: present
-      update_cache: yes
-    when: linux_distribution == "centos"
-    notify:
-      - Enable Kibana service at startup
-  
-  - name: Install kibana (ubuntu)
-    apt:
-      name: kibana
-      state: present
-    when: linux_distribution == "ubuntu"
-    notify:
-      - Enable Kibana service at startup
-
-  - name: Copy kibana config file
-    copy:
-      src: ./kibana.yml
-      dest: /etc/kibana/kibana.yml
-    notify:
-      - Restart Kibana service
-
-  - name: Check kibana config file location
-    stat:
-      path: /etc/kibana/kibana.yml
-    register: kibana
-  - debug:
-      var: kibana.stat.exists
-
-  - name: Ensure elasticsearch host is configured
-    lineinfile:
-      name: /etc/kibana/kibana.yml
-      line: "http://localhost:9200"
-      state: present
-    check_mode: yes
-    register: server_host
-  - debug:
-      var: server_host.failed  
-
-  - name: Ensure kibana server port is 5601
-    lineinfile:
-      name: /etc/kibana/kibana.yml
-      line: "server.port: 5601"
-      state: present
-    check_mode: yes
-    register: server_port
-  - debug:
-      var: server_port.failed 
+  - include_tasks: ./tasks/kibana.yml
+  - include_tasks: ./tests/kibana.yml    
 
   #####################################################################
   #                      Install filebeat
   #####################################################################  
-  - name: Install filebeat (centos)
-    yum:
-      name: filebeat
-      state: present
-      update_cache: yes
-    when: linux_distribution == "centos"
-    notify:
-      - Enable filebeat
-  
-  - name: Install metricbeat (ubuntu)
-    apt:
-      name: metricbeat
-      state: present
-    when: linux_distribution == "ubuntu"
-    notify:
-      - Enable metricbeat service at startup
+  - include_tasks: ./tasks/beat.yml
   
   #####################################################################
   #                      Check Services status
   ##################################################################### 
-  
-  - name: Check ELK services status
-    service_facts:
-    register: elk_state
-  - debug:
-      var: elk_state.ansible_facts.services['elasticsearch.service']
-  - debug:
-      var: elk_state.ansible_facts.services['logstash.service']
-  - debug:
-      var: elk_state.ansible_facts.services['kibana.service']
+  - name: Flush handlers
+    meta: flush_handlers
+  - include_tasks: ./tests/services.yml
   
   #####################################################################
   #                      Handlers

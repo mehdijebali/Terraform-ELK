@@ -1,0 +1,30 @@
+---
+- name: Update all packages (centos)
+  yum:
+    name: '*'
+    state: latest
+    update_only: yes
+  when: linux_distribution == "centos"
+  
+- name: Install Java (centos)
+  yum:
+    name: java-1.8.0
+    state: present
+    update_cache: yes
+  when: linux_distribution == "centos"
+
+- name: Update apt repo and cache on Ubuntu box (ubuntu)
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+  when: linux_distribution == "ubuntu"
+- name: Upgrade all packages on servers (ubuntu)
+  apt:
+    upgrade: dist
+    force_apt_get: yes
+  when: linux_distribution == "ubuntu"
+- name: Install java (ubuntu)
+  apt:
+    name: openjdk-8-jdk
+    state: present
+  when: linux_distribution == "ubuntu"

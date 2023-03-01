@@ -1,0 +1,24 @@
+---
+- name: Install Logstash (centos)
+  yum:
+    name: logstash
+    state: present
+    update_cache: yes
+  when: linux_distribution == "centos"
+  notify:
+    - Enable Logstash service at startup
+
+- name: Install Logstash (ubuntu)
+  apt:
+    name: logstash
+    state: present
+  when: linux_distribution == "ubuntu"
+  notify:
+    - Enable Logstash service at startup
+
+- name: Copy apache config file
+  copy:
+    src: ./files/apache-01.conf
+    dest: /etc/logstash/conf.d/apache-01.conf
+  notify:
+    - Restart Logstash service

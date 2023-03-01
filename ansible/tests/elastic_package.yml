@@ -1,0 +1,27 @@
+---
+- name: Check file elasticsearch repo location (centos)
+  stat:
+    path: /etc/yum.repos.d/elasticsearch.repo
+  register: repo
+  when: linux_distribution == "centos"
+- debug:
+    var: repo.stat.exists
+  when: linux_distribution == "centos"
+
+- name: Check elasticsearch RPM file location (centos)
+  stat:
+    path: /tmp/elasticsearch-7.15.2-x86_64.rpm
+  register: rpm
+  when: linux_distribution == "centos"
+- debug:
+    var: rpm.stat.exists
+  when: linux_distribution == "centos"
+
+- name: Check elasticsearch SHA Key location (centos)
+  stat:
+    path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
+  register: sha
+  when: linux_distribution == "centos"
+- debug:
+    var: sha.stat.exists
+  when: linux_distribution == "centos"

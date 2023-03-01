@@ -1,0 +1,6 @@
+---
+- name: Check Java version 
+  command: sudo java -version
+  register: java_version
+- debug:
+    var: java_version.stderr
