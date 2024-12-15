@@ -19,7 +19,7 @@
 
 - name: Copy apache config file
   copy:
-    src: ./files/apache-01.conf
+    src: apache-01.conf
     dest: /etc/logstash/conf.d/apache-01.conf
   notify:
     - Restart Logstash service
