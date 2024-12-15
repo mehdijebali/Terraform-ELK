@@ -7,7 +7,7 @@
 
 - name: Copy elasticsearch repo file (centos)
   copy:
-    src: ./elasticsearch.repo
+    src: elasticsearch.repo
     dest: /etc/yum.repos.d/elasticsearch.repo
   when: linux_distribution == "centos"
 
@@ -37,8 +37,8 @@
 - name: update cache and ignore errors in case of problems (ubuntu)
   apt: 
     update_cache: yes
-    ignore_errors: yes
   when: linux_distribution == "ubuntu"
+  ignore_errors: true
 
 - name: Check file elasticsearch repo location (centos)
   stat:
