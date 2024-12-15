@@ -1,2 +1,4 @@
 ---
 # tasks file for elasticsearch
+- include_tasks: elastic_package.yml
+- include_tasks: elastic_install.yml
