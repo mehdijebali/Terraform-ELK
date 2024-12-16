@@ -3,94 +3,29 @@
   hosts: all
   become: true
 
+  vars:
+    linux_distribution: centos
+
+  roles:
+    - java
+    - elasticsearch
+    - logstash
+    - kibana
+    - filebeat
+  
   tasks:
-  - include_vars: ./vars/main.yml
-  
-  #####################################################################
-  #                      Install Java
-  #####################################################################                      
-  - include_tasks: ./tasks/java.yml
-  - include_tasks: ./tests/java.yml
-  
-  #####################################################################
-  #                      Import Elastic package
-  #####################################################################  
-  - include_tasks: ./tasks/elastic_package.yml
-  - include_tasks: ./tests/elastic_package.yml  
-  
-  #####################################################################
-  #                      Install Elasticsearch
-  #####################################################################  
-  - include_tasks: ./tasks/elasticsearch.yml
-  - include_tasks: ./tests/elasticsearch.yml    
-  
-  #####################################################################
-  #                      Install Logstash
-  #####################################################################  
-  - include_tasks: ./tasks/logstash.yml
-  - include_tasks: ./tests/logstash.yml    
+    - name: Run handlers
+      meta: flush_handlers
 
-  #####################################################################
-  #                      Install Kibana
-  #####################################################################  
-  - include_tasks: ./tasks/kibana.yml
-  - include_tasks: ./tests/kibana.yml    
-
-  #####################################################################
-  #                      Install filebeat
-  #####################################################################  
-  - include_tasks: ./tasks/beat.yml
-  
-  #####################################################################
-  #                      Check Services status
-  ##################################################################### 
-  - name: Flush handlers
-    meta: flush_handlers
-  - include_tasks: ./tests/services.yml
-  
-  #####################################################################
-  #                      Handlers
-  ##################################################################### 
-  handlers:
-  - name: Enable Elasticsearch service at startup
-    service:
-      name: elasticsearch
-      state: started
-      enabled: yes
-
-  - name: Restart Elasticsearch service
-    service:
-      name: elasticsearch
-      state: restarted
-
-  - name: Enable Logstash service at startup
-    service:
-      name: logstash
-      state: started
-      enabled: yes
-
-  - name: Restart Logstash service
-    service:
-      name: logstash
-      state: restarted
-  
-  - name: Enable Kibana service at startup
-    service:
-      name: kibana
-      state: started
-      enabled: yes
-
-  - name: Restart Kibana service
-    service:
-      name: kibana
-      state: restarted
-  
-  - name: Enable filebeat
-    shell: sudo filebeat modules enable system
-
-  - name: Enable metricbeat service at startup
-    service:
-      name: metricbeat
-      state: started
-      enabled: yes
-      
+    - name: Check ELK services status
+      service_facts:
+      register: elk_state
+    
+    - debug:
+        var: elk_state.ansible_facts.services['elasticsearch.service']
+    
+    - debug:
+        var: elk_state.ansible_facts.services['logstash.service']
+    
+    - debug:
+        var: elk_state.ansible_facts.services['kibana.service']
