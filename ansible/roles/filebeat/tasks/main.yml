@@ -1,0 +1,18 @@
+---
+# tasks file for filebeat
+- name: Install filebeat (centos)
+  yum:
+    name: filebeat
+    state: present
+    update_cache: yes
+  when: linux_distribution == "centos"
+  notify:
+    - Enable filebeat
+
+- name: Install metricbeat (ubuntu)
+  apt:
+    name: metricbeat
+    state: present
+  when: linux_distribution == "ubuntu"
+  notify:
+    - Enable metricbeat service at startup

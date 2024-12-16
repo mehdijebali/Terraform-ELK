@@ -1,0 +1,11 @@
+---
+# handlers file for kibana
+- name: Enable Kibana service at startup
+  service:
+    name: kibana
+    state: started
+    enabled: yes
+- name: Restart Kibana service
+  service:
+    name: kibana
+    state: restarted

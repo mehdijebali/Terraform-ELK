@@ -1,0 +1,49 @@
+---
+- name: Install Elasticsearch (centos)
+  shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
+  when: linux_distribution == "centos"
+  notify:
+    - Enable Elasticsearch service at startup
+  
+- name: Install Elasticsearch (ubuntu)
+  apt:
+    name: elasticsearch
+    state: present
+    update_cache: yes
+  when: linux_distribution == "ubuntu"
+  notify:
+    - Enable Elasticsearch service at startup
+
+- name: Copy elasticsearch config file
+  copy:
+    src: elasticsearch.yml
+    dest: /etc/elasticsearch/elasticsearch.yml
+  notify:
+    - Restart Elasticsearch service
+
+- name: Check elasticsearch config file location
+  stat:
+    path: /etc/elasticsearch/elasticsearch.yml
+  register: elastic
+- debug:
+    var: elastic.stat.exists
+  
+- name: Ensure elasticsearch network host is localhost
+  lineinfile:
+    name: /etc/elasticsearch/elasticsearch.yml
+    line: "network.host: 127.0.0.1"
+    state: present
+  check_mode: yes
+  register: host
+- debug:
+    var: host.failed  
+
+- name: Ensure elasticsearch http port is 9200
+  lineinfile:
+    name: /etc/elasticsearch/elasticsearch.yml
+    line: "http.port: 9200"
+    state: present
+  check_mode: yes
+  register: port
+- debug:
+    var: port.failed 
