@@ -18,8 +18,8 @@
     - Enable Logstash service at startup
 
 - name: Copy apache config file
-  copy:
-    src: apache-01.conf
+  template:
+    src: apache-01.conf.j2
     dest: /etc/logstash/conf.d/apache-01.conf
   notify:
     - Restart Logstash service
