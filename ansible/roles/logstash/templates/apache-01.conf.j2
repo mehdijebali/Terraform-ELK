@@ -22,6 +22,6 @@ filter {
  
 output {
     elasticsearch {
-        hosts => ["{{ elastic.host }}:{{ elastic.port }}"]
+        hosts => ["{{ elastic.host }}"]
     }
 }
