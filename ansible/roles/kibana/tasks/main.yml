@@ -18,8 +18,8 @@
     - Enable Kibana service at startup
 
 - name: Copy kibana config file
-  copy:
-    src: ./files/kibana.yml
+  template:
+    src: kibana.yml.j2
     dest: /etc/kibana/kibana.yml
   notify:
     - Restart Kibana service

@@ -6,8 +6,8 @@
   when: linux_distribution == "centos"
 
 - name: Copy elasticsearch repo file (centos)
-  copy:
-    src: elasticsearch.repo
+  template:
+    src: elasticsearch.repo.j2
     dest: /etc/yum.repos.d/elasticsearch.repo
   when: linux_distribution == "centos"
 

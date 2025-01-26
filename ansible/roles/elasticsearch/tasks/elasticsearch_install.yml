@@ -15,8 +15,8 @@
     - Enable Elasticsearch service at startup
 
 - name: Copy elasticsearch config file
-  copy:
-    src: elasticsearch.yml
+  template:
+    src: elasticsearch.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
   notify:
     - Restart Elasticsearch service
