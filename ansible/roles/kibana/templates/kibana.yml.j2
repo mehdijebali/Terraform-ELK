@@ -25,7 +25,7 @@ server.host: {{ server.host }}
 #server.name: "your-hostname"
 
 # The URLs of the Elasticsearch instances to use for all your queries.
-elasticsearch.hosts: [{{ elastic.host }}]
+elasticsearch.hosts: [{{ host }}]
 
 # Kibana uses an index in Elasticsearch to store saved searches, visualizations and
 # dashboards. Kibana creates a new index if the index doesn't already exist.
