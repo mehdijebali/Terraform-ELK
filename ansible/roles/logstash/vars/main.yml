@@ -1,4 +1,5 @@
 ---
 # vars file for logstash
-elastic:
-  host: localhost:9200
+elasticsearch:
+  host: localhost
+  port: 9200
