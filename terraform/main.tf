@@ -11,8 +11,8 @@ resource "aws_eip" "ip" {
 }
 
 data "aws_ami" "packer_ami" {
-  most_recent      = true
-  owners           = ["self"]
+  most_recent = true
+  owners      = ["self"]
 
   filter {
     name   = "name"
