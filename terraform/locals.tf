@@ -1,5 +1,5 @@
 locals {
-  SG_Name = "${var.SG_NAMES[1]}"
+  SG_Name = var.SG_NAMES[1]
 }
 
 locals {
