@@ -1,9 +1,6 @@
 locals {
-  SG_Name = var.SG_NAMES[1]
-}
-
-locals {
-  sg_tags = {
-    Name = local.SG_Name
+  ami-name = var.LD_NAME == "centos" ? "centos-elk-pkr-*" : "ubuntu-elk-pkr-*"
+  elk-sg-tags = {
+    Name = var.SG_NAMES[1]
   }
 }
