@@ -1,16 +1,16 @@
 ---
 # tasks file for logstash
 - name: Install Logstash (centos)
-  yum:
+  ansible.builtin.yum:
     name: logstash
     state: present
-    update_cache: yes
+    update_cache: true
   when: linux_distribution == "centos"
   notify:
     - Enable Logstash service at startup
 
 - name: Install Logstash (ubuntu)
-  apt:
+  ansible.builtin.apt:
     name: logstash
     state: present
   when: linux_distribution == "ubuntu"
@@ -18,15 +18,15 @@
     - Enable Logstash service at startup
 
 - name: Copy apache config file
-  template:
+  ansible.builtin.template:
     src: apache-01.conf.j2
     dest: /etc/logstash/conf.d/apache-01.conf
   notify:
     - Restart Logstash service
 
 - name: Check apache config file location
-  stat:
+  ansible.builtin.stat:
     path: /etc/logstash/conf.d/apache-01.conf
   register: apache
-- debug:
+- ansible.builtin.debug:
     var: apache.stat.exists
