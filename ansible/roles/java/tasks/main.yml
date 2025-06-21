@@ -1,39 +1,39 @@
 ---
 # tasks file for java
 - name: Update all packages (centos)
-  yum:
+  ansible.builtin.yum:
     name: '*'
     state: latest
-    update_only: yes
+    update_only: true
   when: linux_distribution == "centos"
   
 - name: Install Java (centos)
-  yum:
+  ansible.builtin.yum:
     name: java-1.8.0
     state: present
-    update_cache: yes
+    update_cache: true
   when: linux_distribution == "centos"
 
 - name: Update apt repo and cache on Ubuntu box (ubuntu)
-  apt:
-    update_cache: yes
-    force_apt_get: yes
+  ansible.builtin.apt:
+    update_cache: true
+    force_apt_get: true
   when: linux_distribution == "ubuntu"
 
 - name: Upgrade all packages on servers (ubuntu)
-  apt:
+  ansible.builtin.apt:
     upgrade: dist
-    force_apt_get: yes
+    force_apt_get: true
   when: linux_distribution == "ubuntu"
 
 - name: Install java (ubuntu)
-  apt:
+  ansible.builtin.apt:
     name: openjdk-8-jdk
     state: present
   when: linux_distribution == "ubuntu"
 
 - name: Check Java version 
-  command: sudo java -version
+  ansible.builtin.command: sudo java -version
   register: java_version
-- debug:
+- ansible.builtin.debug:
     var: java_version.stderr

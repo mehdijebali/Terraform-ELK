@@ -15,17 +15,17 @@
   
   tasks:
     - name: Run handlers
-      meta: flush_handlers
+      ansible.builtin.meta: flush_handlers
 
     - name: Check ELK services status
-      service_facts:
+      ansible.builtin.service_facts:
       register: elk_state
     
-    - debug:
+    - ansible.builtin.debug:
         var: elk_state.ansible_facts.services['elasticsearch.service']
     
-    - debug:
+    - ansible.builtin.debug:
         var: elk_state.ansible_facts.services['logstash.service']
     
-    - debug:
+    - ansible.builtin.debug:
         var: elk_state.ansible_facts.services['kibana.service']

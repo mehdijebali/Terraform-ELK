@@ -1,11 +1,11 @@
 terraform {
-  required_version = ">= 1.5" 
+  required_version = ">= 1.5"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 5.0"
-      }
     }
+  }
 }
 
 provider "aws" {
@@ -26,7 +26,7 @@ data "aws_ami" "packer_ami" {
 
   filter {
     name   = "name"
-    values = [var.LD_NAME == "centos" ? "centos-elk-pkr-*" : "ubuntu-elk-pkr-*"]
+    values = [local.ami-name]
   }
 }
 

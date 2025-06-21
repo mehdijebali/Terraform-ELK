@@ -1,11 +1,11 @@
 ---
 # handlers file for logstash
 - name: Enable Logstash service at startup
-  service:
+  ansible.builtin.service:
     name: logstash
     state: started
-    enabled: yes
+    enabled: true
 - name: Restart Logstash service
-  service:
+  ansible.builtin.service:
     name: logstash
     state: restarted

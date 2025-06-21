@@ -1,68 +1,68 @@
 ---
 - name: Import elasticsearch rpm key (centos)
-  rpm_key:
+  ansible.builtin.rpm_key:
     state: present
     key: "{{elastic.rpm_key}}"
   when: linux_distribution == "centos"
 
 - name: Copy elasticsearch repo file (centos)
-  template:
+  ansible.builtin.template:
     src: elasticsearch.repo.j2
     dest: /etc/yum.repos.d/elasticsearch.repo
   when: linux_distribution == "centos"
 
 - name: Download Elasticsearch RPM (centos)
-  get_url:
+  ansible.builtin.get_url:
     url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{elastic.version}}.rpm
     dest: /tmp/elasticsearch-{{elastic.version}}.rpm
   when: linux_distribution == "centos"
 
 - name: Download Elasticsearch SHA Key (centos)
-  get_url:
+  ansible.builtin.get_url:
     url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{elastic.version}}.rpm.sha512
     dest: /tmp/elasticsearch-{{elastic.version}}.rpm.sha512
   when: linux_distribution == "centos"
 
 - name: Import Elasticsearch PGP Key (ubuntu)
-  shell: wget -qO - {{elastic.rpm_key}} | sudo apt-key add -
+  ansible.builtin.shell: wget -qO - {{elastic.rpm_key}} | sudo apt-key add -
   when: linux_distribution == "ubuntu"
 
 - name: Add repository definition (ubuntu)
-  copy:
+  ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/elastic-7.x.list
     content: |
       deb https://artifacts.elastic.co/packages/7.x/apt stable main
   when: linux_distribution == "ubuntu"
 
 - name: update cache and ignore errors in case of problems (ubuntu)
-  apt: 
-    update_cache: yes
+  ansible.builtin.apt: 
+    update_cache: true
   when: linux_distribution == "ubuntu"
   ignore_errors: true
 
 - name: Check file elasticsearch repo location (centos)
-  stat:
+  ansible.builtin.stat:
     path: /etc/yum.repos.d/elasticsearch.repo
   register: repo
   when: linux_distribution == "centos"
-- debug:
+- ansible.builtin.debug:
     var: repo.stat.exists
   when: linux_distribution == "centos"
 
 - name: Check elasticsearch RPM file location (centos)
-  stat:
+  ansible.builtin.stat:
     path: /tmp/elasticsearch-7.15.2-x86_64.rpm
   register: rpm
   when: linux_distribution == "centos"
-- debug:
+- ansible.builtin.debug:
     var: rpm.stat.exists
   when: linux_distribution == "centos"
 
 - name: Check elasticsearch SHA Key location (centos)
-  stat:
+  ansible.builtin.stat:
     path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
   register: sha
   when: linux_distribution == "centos"
-- debug:
+- ansible.builtin.debug:
     var: sha.stat.exists
   when: linux_distribution == "centos"
