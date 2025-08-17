@@ -1,68 +1,68 @@
 ---
-- name: Import elasticsearch rpm key (centos)
+- name: Import elasticsearch rpm key (Amazon)
   ansible.builtin.rpm_key:
     state: present
     key: "{{elastic.rpm_key}}"
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
 
-- name: Copy elasticsearch repo file (centos)
+- name: Copy elasticsearch repo file (Amazon)
   ansible.builtin.template:
     src: elasticsearch.repo.j2
     dest: /etc/yum.repos.d/elasticsearch.repo
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
 
-- name: Download Elasticsearch RPM (centos)
+- name: Download Elasticsearch RPM (Amazon)
   ansible.builtin.get_url:
     url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{elastic.version}}.rpm
     dest: /tmp/elasticsearch-{{elastic.version}}.rpm
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
 
-- name: Download Elasticsearch SHA Key (centos)
+- name: Download Elasticsearch SHA Key (Amazon)
   ansible.builtin.get_url:
     url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{elastic.version}}.rpm.sha512
     dest: /tmp/elasticsearch-{{elastic.version}}.rpm.sha512
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
 
-- name: Import Elasticsearch PGP Key (ubuntu)
+- name: Import Elasticsearch PGP Key (Ubuntu)
   ansible.builtin.shell: wget -qO - {{elastic.rpm_key}} | sudo apt-key add -
-  when: linux_distribution == "ubuntu"
+  when: ansible_distribution == "Ubuntu"
 
-- name: Add repository definition (ubuntu)
+- name: Add repository definition (Ubuntu)
   ansible.builtin.copy:
     dest: /etc/apt/sources.list.d/elastic-7.x.list
     content: |
       deb https://artifacts.elastic.co/packages/7.x/apt stable main
-  when: linux_distribution == "ubuntu"
+  when: ansible_distribution == "Ubuntu"
 
-- name: update cache and ignore errors in case of problems (ubuntu)
+- name: update cache and ignore errors in case of problems (Ubuntu)
   ansible.builtin.apt: 
     update_cache: true
-  when: linux_distribution == "ubuntu"
+  when: ansible_distribution == "Ubuntu"
   ignore_errors: true
 
-- name: Check file elasticsearch repo location (centos)
+- name: Check file elasticsearch repo location (Amazon)
   ansible.builtin.stat:
     path: /etc/yum.repos.d/elasticsearch.repo
   register: repo
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
 - ansible.builtin.debug:
     var: repo.stat.exists
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
 
-- name: Check elasticsearch RPM file location (centos)
+- name: Check elasticsearch RPM file location (Amazon)
   ansible.builtin.stat:
     path: /tmp/elasticsearch-7.15.2-x86_64.rpm
   register: rpm
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
 - ansible.builtin.debug:
     var: rpm.stat.exists
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
 
-- name: Check elasticsearch SHA Key location (centos)
+- name: Check elasticsearch SHA Key location (Amazon)
   ansible.builtin.stat:
     path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
   register: sha
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
 - ansible.builtin.debug:
     var: sha.stat.exists
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"

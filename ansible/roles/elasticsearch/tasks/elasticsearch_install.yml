@@ -1,16 +1,16 @@
 ---
-- name: Install Elasticsearch (centos)
+- name: Install Elasticsearch (Amazon)
   ansible.builtin.shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
   notify:
     - Enable Elasticsearch service at startup
   
-- name: Install Elasticsearch (ubuntu)
+- name: Install Elasticsearch (Ubuntu)
   ansible.builtin.apt:
     name: elasticsearch
     state: present
     update_cache: true
-  when: linux_distribution == "ubuntu"
+  when: ansible_distribution == "Ubuntu"
   notify:
     - Enable Elasticsearch service at startup
 
