@@ -1,18 +1,18 @@
 ---
 # tasks file for filebeat
-- name: Install filebeat (centos)
+- name: Install filebeat (Amazon)
   ansible.builtin.yum:
     name: filebeat
     state: present
     update_cache: true
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
   notify:
     - Enable filebeat
 
-- name: Install metricbeat (ubuntu)
+- name: Install metricbeat (Ubuntu)
   ansible.builtin.apt:
     name: metricbeat
     state: present
-  when: linux_distribution == "ubuntu"
+  when: ansible_distribution == "Ubuntu"
   notify:
     - Enable metricbeat service at startup
