@@ -1,19 +1,19 @@
 ---
 # tasks file for kibana
-- name: Install kibana (centos)
+- name: Install kibana (Amazon)
   ansible.builtin.yum:
     name: kibana
     state: present
     update_cache: true
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
   notify:
     - Enable Kibana service at startup
 
-- name: Install kibana (ubuntu)
+- name: Install kibana (Ubuntu)
   ansible.builtin.apt:
     name: kibana
     state: present
-  when: linux_distribution == "ubuntu"
+  when: ansible_distribution == "Ubuntu"
   notify:
     - Enable Kibana service at startup
 
