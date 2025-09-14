@@ -3,4 +3,8 @@ locals {
   elk-sg-tags = {
     Name = var.SG_NAMES[1]
   }
+  default-tags = {
+    Stack       = "ELK",
+    Environment = "Production"
+  }
 }
