@@ -10,6 +10,9 @@ terraform {
 
 provider "aws" {
   region = var.AWS_REGION
+  default_tags {
+    tags = local.default-tags
+  }
 }
 
 data "aws_vpc" "default" {
