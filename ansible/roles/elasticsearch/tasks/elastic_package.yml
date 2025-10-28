@@ -2,7 +2,7 @@
 - name: Import elasticsearch rpm key (Amazon)
   ansible.builtin.rpm_key:
     state: present
-    key: "{{elastic.rpm_key}}"
+    key: "{{ elastic.rpm_key }}"
   when: ansible_distribution == "Amazon"
 
 - name: Copy elasticsearch repo file (Amazon)
@@ -13,18 +13,18 @@
 
 - name: Download Elasticsearch RPM (Amazon)
   ansible.builtin.get_url:
-    url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{elastic.version}}.rpm
-    dest: /tmp/elasticsearch-{{elastic.version}}.rpm
+    url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elastic.version }}.rpm
+    dest: /tmp/elasticsearch-{{ elastic.version }}.rpm
   when: ansible_distribution == "Amazon"
 
 - name: Download Elasticsearch SHA Key (Amazon)
   ansible.builtin.get_url:
-    url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{elastic.version}}.rpm.sha512
-    dest: /tmp/elasticsearch-{{elastic.version}}.rpm.sha512
+    url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elastic.version }}.rpm.sha512
+    dest: /tmp/elasticsearch-{{ elastic.version }}.rpm.sha512
   when: ansible_distribution == "Amazon"
 
 - name: Import Elasticsearch PGP Key (Ubuntu)
-  ansible.builtin.shell: wget -qO - {{elastic.rpm_key}} | sudo apt-key add -
+  ansible.builtin.shell: wget -qO - {{ elastic.rpm_key }} | sudo apt-key add -
   when: ansible_distribution == "Ubuntu"
 
 - name: Add repository definition (Ubuntu)
