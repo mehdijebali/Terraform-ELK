@@ -9,7 +9,7 @@
     - logstash
     - kibana
     - filebeat
-  
+
   tasks:
     - name: Run handlers
       ansible.builtin.meta: flush_handlers
@@ -17,12 +17,15 @@
     - name: Check ELK services status
       ansible.builtin.service_facts:
       register: elk_state
-    
-    - ansible.builtin.debug:
+
+    - name: Check Elasticsearch Service Status
+      ansible.builtin.debug:
         var: elk_state.ansible_facts.services['elasticsearch.service']
-    
-    - ansible.builtin.debug:
+
+    - name: Check Logstash Service Status
+      ansible.builtin.debug:
         var: elk_state.ansible_facts.services['logstash.service']
-    
-    - ansible.builtin.debug:
+
+    - name: Check Kibana Service Status
+      ansible.builtin.debug:
         var: elk_state.ansible_facts.services['kibana.service']

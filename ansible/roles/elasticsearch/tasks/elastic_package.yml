@@ -35,7 +35,7 @@
   when: ansible_distribution == "Ubuntu"
 
 - name: update cache and ignore errors in case of problems (Ubuntu)
-  ansible.builtin.apt: 
+  ansible.builtin.apt:
     update_cache: true
   when: ansible_distribution == "Ubuntu"
   ignore_errors: true

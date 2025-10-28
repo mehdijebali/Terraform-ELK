@@ -39,7 +39,7 @@
   check_mode: true
   register: server_host
 - ansible.builtin.debug:
-    var: server_host.failed  
+    var: server_host.failed
 
 - name: Ensure kibana server port is 5601
   ansible.builtin.lineinfile:

@@ -4,7 +4,7 @@
   when: ansible_distribution == "Amazon"
   notify:
     - Enable Elasticsearch service at startup
-  
+
 - name: Install Elasticsearch (Ubuntu)
   ansible.builtin.apt:
     name: elasticsearch
@@ -27,7 +27,7 @@
   register: elastic
 - ansible.builtin.debug:
     var: elastic.stat.exists
-  
+
 - name: Ensure elasticsearch network host is localhost
   ansible.builtin.lineinfile:
     name: /etc/elasticsearch/elasticsearch.yml
@@ -36,7 +36,7 @@
   check_mode: true
   register: host
 - ansible.builtin.debug:
-    var: host.failed  
+    var: host.failed
 
 - name: Ensure elasticsearch http port is 9200
   ansible.builtin.lineinfile:
@@ -46,4 +46,4 @@
   check_mode: true
   register: port
 - ansible.builtin.debug:
-    var: port.failed 
+    var: port.failed

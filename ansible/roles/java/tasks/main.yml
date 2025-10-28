@@ -6,7 +6,7 @@
     state: latest
     update_only: true
   when: ansible_distribution == "Amazon"
-  
+
 - name: Install Java (Amazon)
   ansible.builtin.yum:
     name: java-1.8.0
@@ -32,7 +32,7 @@
     state: present
   when: ansible_distribution == "Ubuntu"
 
-- name: Check Java version 
+- name: Check Java version
   ansible.builtin.command: sudo java -version
   register: java_version
 - ansible.builtin.debug:
