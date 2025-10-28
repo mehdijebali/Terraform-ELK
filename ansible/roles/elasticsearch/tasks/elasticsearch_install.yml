@@ -1,6 +1,8 @@
 ---
 - name: Install Elasticsearch (Amazon)
-  ansible.builtin.shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
+  ansible.builtin.dnf:
+    name: /tmp/elasticsearch-7.15.2-x86_64.rpm
+    state: present
   when: ansible_distribution == "Amazon"
   notify:
     - Enable Elasticsearch service at startup

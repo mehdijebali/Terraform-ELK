@@ -27,7 +27,9 @@
   when: ansible_distribution == "Amazon"
 
 - name: Import Elasticsearch PGP Key (Ubuntu)
-  ansible.builtin.shell: wget -qO - {{ elasticsearch_elastic.rpm_key }} | sudo apt-key add -
+  ansible.builtin.apt_key:
+    url: "{{ elasticsearch_elastic.rpm_key }}"
+    state: present
   when: ansible_distribution == "Ubuntu"
 
 - name: Add repository definition (Ubuntu)
@@ -41,18 +43,22 @@
 - name: Update cache and ignore errors in case of problems (Ubuntu)
   ansible.builtin.apt:
     update_cache: true
+  register: elasticsearch_apt_update_result
+  failed_when:
+    - elasticsearch_apt_update_result is failed
+    - "'Could not fetch' not in elasticsearch_apt_update_result.msg"
   when: ansible_distribution == "Ubuntu"
   ignore_errors: true
 
 - name: Get file elasticsearch repo location (Amazon)
   ansible.builtin.stat:
     path: /etc/yum.repos.d/elasticsearch.repo
-  register: elasticsearch_ repo
+  register: elasticsearch_repo
   when: ansible_distribution == "Amazon"
 
 - name: Check file elasticsearch repo location (Amazon)
   ansible.builtin.debug:
-    var: elasticsearch_ repo.stat.exists
+    var: elasticsearch_repo.stat.exists
   when: ansible_distribution == "Amazon"
 
 - name: Get elasticsearch RPM file location (Amazon)
