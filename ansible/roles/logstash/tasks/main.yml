@@ -21,14 +21,15 @@
   ansible.builtin.template:
     src: apache-01.conf.j2
     dest: /etc/logstash/conf.d/apache-01.conf
+    mode: '0644'
   notify:
     - Restart Logstash service
 
 - name: Get apache config file location
   ansible.builtin.stat:
     path: /etc/logstash/conf.d/apache-01.conf
-  register: apache
+  register: logstash_apache
 
 - name: Check apache config file location
   ansible.builtin.debug:
-    var: apache.stat.exists
+    var: logstash_apache.stat.exists

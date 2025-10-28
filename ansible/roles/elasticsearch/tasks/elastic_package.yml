@@ -2,29 +2,32 @@
 - name: Import elasticsearch rpm key (Amazon)
   ansible.builtin.rpm_key:
     state: present
-    key: "{{ elastic.rpm_key }}"
+    key: "{{ elasticsearch_elastic.rpm_key }}"
   when: ansible_distribution == "Amazon"
 
 - name: Copy elasticsearch repo file (Amazon)
   ansible.builtin.template:
     src: elasticsearch.repo.j2
     dest: /etc/yum.repos.d/elasticsearch.repo
+    mode: '0644'
   when: ansible_distribution == "Amazon"
 
 - name: Download Elasticsearch RPM (Amazon)
   ansible.builtin.get_url:
-    url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elastic.version }}.rpm
-    dest: /tmp/elasticsearch-{{ elastic.version }}.rpm
+    url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elasticsearch_elastic.version }}.rpm
+    dest: /tmp/elasticsearch-{{ elasticsearch_elastic.version }}.rpm
+    mode: '0644'
   when: ansible_distribution == "Amazon"
 
 - name: Download Elasticsearch SHA Key (Amazon)
   ansible.builtin.get_url:
-    url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elastic.version }}.rpm.sha512
-    dest: /tmp/elasticsearch-{{ elastic.version }}.rpm.sha512
+    url: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elasticsearch_elastic.version }}.rpm.sha512
+    dest: /tmp/elasticsearch-{{ elasticsearch_elastic.version }}.rpm.sha512
+    mode: '0644'
   when: ansible_distribution == "Amazon"
 
 - name: Import Elasticsearch PGP Key (Ubuntu)
-  ansible.builtin.shell: wget -qO - {{ elastic.rpm_key }} | sudo apt-key add -
+  ansible.builtin.shell: wget -qO - {{ elasticsearch_elastic.rpm_key }} | sudo apt-key add -
   when: ansible_distribution == "Ubuntu"
 
 - name: Add repository definition (Ubuntu)
@@ -32,6 +35,7 @@
     dest: /etc/apt/sources.list.d/elastic-7.x.list
     content: |
       deb https://artifacts.elastic.co/packages/7.x/apt stable main
+    mode: '0644'
   when: ansible_distribution == "Ubuntu"
 
 - name: Update cache and ignore errors in case of problems (Ubuntu)
@@ -43,30 +47,32 @@
 - name: Get file elasticsearch repo location (Amazon)
   ansible.builtin.stat:
     path: /etc/yum.repos.d/elasticsearch.repo
-  register: repo
+  register: elasticsearch_ repo
   when: ansible_distribution == "Amazon"
 
 - name: Check file elasticsearch repo location (Amazon)
   ansible.builtin.debug:
-    var: repo.stat.exists
+    var: elasticsearch_ repo.stat.exists
   when: ansible_distribution == "Amazon"
 
 - name: Get elasticsearch RPM file location (Amazon)
   ansible.builtin.stat:
     path: /tmp/elasticsearch-7.15.2-x86_64.rpm
-  register: rpm
+  register: elasticsearch_rpm
   when: ansible_distribution == "Amazon"
 
 - name: Check elasticsearch RPM file location (Amazon)
   ansible.builtin.debug:
-    var: rpm.stat.exists
+    var: elasticsearch_rpm.stat.exists
+  when: ansible_distribution == "Amazon"
+
+- name: Get elasticsearch SHA Key location (Amazon)
+  ansible.builtin.stat:
+    path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
+  register: elasticsearch_sha
   when: ansible_distribution == "Amazon"
 
 - name: Check elasticsearch SHA Key location (Amazon)
-  ansible.builtin.stat:
-    path: /tmp/elasticsearch-7.15.2-x86_64.rpm.sha512
-  register: sha
-  when: ansible_distribution == "Amazon"
-- ansible.builtin.debug:
-    var: sha.stat.exists
+  ansible.builtin.debug:
+    var: elasticsearch_sha.stat.exists
   when: ansible_distribution == "Amazon"

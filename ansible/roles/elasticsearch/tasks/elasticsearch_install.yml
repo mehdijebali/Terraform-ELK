@@ -18,17 +18,18 @@
   ansible.builtin.template:
     src: elasticsearch.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
+    mode: '0644'
   notify:
     - Restart Elasticsearch service
 
 - name: Get elasticsearch config file location
   ansible.builtin.stat:
     path: /etc/elasticsearch/elasticsearch.yml
-  register: elastic
+  register: elasticsearch_elastic
 
 - name: Check elasticsearch config file location
   ansible.builtin.debug:
-    var: elastic.stat.exists
+    var: elasticsearch_elastic.stat.exists
 
 - name: Ensure elasticsearch network host is localhost
   ansible.builtin.lineinfile:
@@ -36,11 +37,11 @@
     line: "network.host: 127.0.0.1"
     state: present
   check_mode: true
-  register: host
+  register: elasticsearch_host
 
 - name: Check elasticsearch network host
   ansible.builtin.debug:
-    var: host.failed
+    var: elasticsearch_host.failed
 
 - name: Ensure elasticsearch http port is 9200
   ansible.builtin.lineinfile:
@@ -48,8 +49,8 @@
     line: "http.port: 9200"
     state: present
   check_mode: true
-  register: port
+  register: elasticsearch_port
 
 - name: Check elasticsearch port
   ansible.builtin.debug:
-    var: port.failed
+    var: elasticsearch_port.failed
