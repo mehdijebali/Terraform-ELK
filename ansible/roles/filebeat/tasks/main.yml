@@ -1,7 +1,7 @@
 ---
 # tasks file for filebeat
 - name: Install filebeat (Amazon)
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: filebeat
     state: present
     update_cache: true

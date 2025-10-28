@@ -34,27 +34,31 @@
       deb https://artifacts.elastic.co/packages/7.x/apt stable main
   when: ansible_distribution == "Ubuntu"
 
-- name: update cache and ignore errors in case of problems (Ubuntu)
+- name: Update cache and ignore errors in case of problems (Ubuntu)
   ansible.builtin.apt:
     update_cache: true
   when: ansible_distribution == "Ubuntu"
   ignore_errors: true
 
-- name: Check file elasticsearch repo location (Amazon)
+- name: Get file elasticsearch repo location (Amazon)
   ansible.builtin.stat:
     path: /etc/yum.repos.d/elasticsearch.repo
   register: repo
   when: ansible_distribution == "Amazon"
-- ansible.builtin.debug:
+
+- name: Check file elasticsearch repo location (Amazon)
+  ansible.builtin.debug:
     var: repo.stat.exists
   when: ansible_distribution == "Amazon"
 
-- name: Check elasticsearch RPM file location (Amazon)
+- name: Get elasticsearch RPM file location (Amazon)
   ansible.builtin.stat:
     path: /tmp/elasticsearch-7.15.2-x86_64.rpm
   register: rpm
   when: ansible_distribution == "Amazon"
-- ansible.builtin.debug:
+
+- name: Check elasticsearch RPM file location (Amazon)
+  ansible.builtin.debug:
     var: rpm.stat.exists
   when: ansible_distribution == "Amazon"
 

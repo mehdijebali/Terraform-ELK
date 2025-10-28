@@ -21,11 +21,13 @@
   notify:
     - Restart Elasticsearch service
 
-- name: Check elasticsearch config file location
+- name: Get elasticsearch config file location
   ansible.builtin.stat:
     path: /etc/elasticsearch/elasticsearch.yml
   register: elastic
-- ansible.builtin.debug:
+
+- name: Check elasticsearch config file location
+  ansible.builtin.debug:
     var: elastic.stat.exists
 
 - name: Ensure elasticsearch network host is localhost
@@ -35,7 +37,9 @@
     state: present
   check_mode: true
   register: host
-- ansible.builtin.debug:
+
+- name: Check elasticsearch network host
+  ansible.builtin.debug:
     var: host.failed
 
 - name: Ensure elasticsearch http port is 9200
@@ -45,5 +49,7 @@
     state: present
   check_mode: true
   register: port
-- ansible.builtin.debug:
+
+- name: Check elasticsearch port
+  ansible.builtin.debug:
     var: port.failed

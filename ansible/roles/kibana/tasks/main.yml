@@ -1,7 +1,7 @@
 ---
 # tasks file for kibana
 - name: Install kibana (Amazon)
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: kibana
     state: present
     update_cache: true
@@ -24,29 +24,35 @@
   notify:
     - Restart Kibana service
 
-- name: Check kibana config file location
+- name: Get kibana config file location
   ansible.builtin.stat:
     path: /etc/kibana/kibana.yml
   register: kibana
-- ansible.builtin.debug:
+
+- name: Check kibana config file location
+  ansible.builtin.debug:
     var: kibana.stat.exists
 
-- name: Ensure elasticsearch host is configured
+- name: Get elasticsearch host configuration
   ansible.builtin.lineinfile:
     name: /etc/kibana/kibana.yml
     line: "http://localhost:9200"
     state: present
   check_mode: true
   register: server_host
-- ansible.builtin.debug:
+
+- name: Ensure elasticsearch host is configured
+  ansible.builtin.debug:
     var: server_host.failed
 
-- name: Ensure kibana server port is 5601
+- name: Get kibana server port
   ansible.builtin.lineinfile:
     name: /etc/kibana/kibana.yml
     line: "server.port: 5601"
     state: present
   check_mode: true
   register: server_port
-- ansible.builtin.debug:
+
+- name: Ensure kibana server port is 5601
+  ansible.builtin.debug:
     var: server_port.failed
