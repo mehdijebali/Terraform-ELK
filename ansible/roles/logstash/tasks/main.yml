@@ -5,7 +5,7 @@
     name: logstash
     state: present
     update_cache: true
-  when: linux_distribution == "centos"
+  when: ansible_distribution == "Amazon"
   notify:
     - Enable Logstash service at startup
 
@@ -13,7 +13,7 @@
   ansible.builtin.apt:
     name: logstash
     state: present
-  when: linux_distribution == "ubuntu"
+  when: ansible_distribution == "Ubuntu"
   notify:
     - Enable Logstash service at startup
 

@@ -7,7 +7,7 @@
     update_cache: true
   when: ansible_distribution == "Amazon"
   notify:
-    - Enable filebeat
+    - Enable filebeat service at startup
 
 - name: Install metricbeat (Ubuntu)
   ansible.builtin.apt:
