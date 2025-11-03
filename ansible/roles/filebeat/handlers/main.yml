@@ -1,8 +1,10 @@
 ---
 # handlers file for filebeat
-- name: Enable filebeat
-  ansible.builtin.shell: sudo filebeat modules enable system
-  ignore_errors: true
+- name: Enable filebeat service at startup
+  ansible.builtin.service:
+    name: filebeat
+    state: started
+    enabled: true
 
 - name: Enable metricbeat service at startup
   ansible.builtin.service:

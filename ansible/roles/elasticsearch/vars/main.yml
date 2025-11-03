@@ -1,6 +1,6 @@
 ---
 # vars file for elasticsearch
-elastic:
+elasticsearch_elastic:
   rpm_key: https://artifacts.elastic.co/GPG-KEY-elasticsearch
   version: 7.15.2-x86_64
   repo: https://artifacts.elastic.co/packages/7.x/apt

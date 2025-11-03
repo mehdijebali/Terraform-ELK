@@ -1,4 +1,7 @@
 ---
 # tasks file for elasticsearch
-- ansible.builtin.include_tasks: elastic_package.yml
-- ansible.builtin.include_tasks: elasticsearch_install.yml
+- name: Install elasticsearch required packages
+  ansible.builtin.include_tasks: elastic_package.yml
+
+- name: Install elasticsearch
+  ansible.builtin.include_tasks: elasticsearch_install.yml

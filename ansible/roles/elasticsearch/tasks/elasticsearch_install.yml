@@ -1,10 +1,12 @@
 ---
 - name: Install Elasticsearch (Amazon)
-  ansible.builtin.shell: sudo rpm --install /tmp/elasticsearch-7.15.2-x86_64.rpm
+  ansible.builtin.dnf:
+    name: /tmp/elasticsearch-7.15.2-x86_64.rpm
+    state: present
   when: ansible_distribution == "Amazon"
   notify:
     - Enable Elasticsearch service at startup
-  
+
 - name: Install Elasticsearch (Ubuntu)
   ansible.builtin.apt:
     name: elasticsearch
@@ -18,25 +20,30 @@
   ansible.builtin.template:
     src: elasticsearch.yml.j2
     dest: /etc/elasticsearch/elasticsearch.yml
+    mode: '0644'
   notify:
     - Restart Elasticsearch service
 
-- name: Check elasticsearch config file location
+- name: Get elasticsearch config file location
   ansible.builtin.stat:
     path: /etc/elasticsearch/elasticsearch.yml
-  register: elastic
-- ansible.builtin.debug:
-    var: elastic.stat.exists
-  
+  register: elasticsearch_elastic
+
+- name: Check elasticsearch config file location
+  ansible.builtin.debug:
+    var: elasticsearch_elastic.stat.exists
+
 - name: Ensure elasticsearch network host is localhost
   ansible.builtin.lineinfile:
     name: /etc/elasticsearch/elasticsearch.yml
     line: "network.host: 127.0.0.1"
     state: present
   check_mode: true
-  register: host
-- ansible.builtin.debug:
-    var: host.failed  
+  register: elasticsearch_host
+
+- name: Check elasticsearch network host
+  ansible.builtin.debug:
+    var: elasticsearch_host.failed
 
 - name: Ensure elasticsearch http port is 9200
   ansible.builtin.lineinfile:
@@ -44,6 +51,8 @@
     line: "http.port: 9200"
     state: present
   check_mode: true
-  register: port
-- ansible.builtin.debug:
-    var: port.failed 
+  register: elasticsearch_port
+
+- name: Check elasticsearch port
+  ansible.builtin.debug:
+    var: elasticsearch_port.failed
