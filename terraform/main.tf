@@ -36,10 +36,7 @@ data "aws_ami" "packer_ami" {
 module "instance" {
   source = "./modules/instance"
 
-  KEY_NAME               = var.KEY_NAME
   AVAILABILITY_ZONE      = var.AVAILABILITY_ZONE
-  PATH_TO_PUBLIC_KEY     = var.PATH_TO_PUBLIC_KEY
-  PATH_TO_PRIVATE_KEY    = var.PATH_TO_PRIVATE_KEY
   SG_VPC_ID              = data.aws_vpc.default.id
   SG_NAME                = var.SG_NAMES[0]
   SG_DESCRIPTION         = var.SG_DESCRIPTIONS[0]
