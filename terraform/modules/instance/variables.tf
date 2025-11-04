@@ -1,7 +1,4 @@
-variable "KEY_NAME" {}
 variable "AVAILABILITY_ZONE" {}
-variable "PATH_TO_PUBLIC_KEY" {}
-variable "PATH_TO_PRIVATE_KEY" {}
 variable "SG_VPC_ID" {}
 variable "SG_NAME" {}
 variable "SG_DESCRIPTION" {}
