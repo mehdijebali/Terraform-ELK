@@ -43,8 +43,7 @@ module "instance" {
   AMI_ID                 = data.aws_ami.packer_ami.id
   INSTANCE_TYPE          = var.INSTANCE_TYPE
   INSTANCE_NAME          = var.INSTANCE_NAME
-  INSTANCE_USERNAME      = var.INSTANCE_USERNAME
-  VPC_SECURITY_GROUP_IDS = [module.instance.instance_ssh_sg_id, aws_security_group.allow_elk.id]
+  VPC_SECURITY_GROUP_IDS = [aws_security_group.allow_elk.id]
 
   depends_on = [aws_security_group.allow_elk]
 }

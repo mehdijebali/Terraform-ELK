@@ -4,18 +4,6 @@ variable "AWS_REGION" {
   default     = "us-east-1"
 }
 
-variable "PATH_TO_PUBLIC_KEY" {
-  type        = string
-  description = "Path to SSH public key"
-  default     = "levelup_key.pub"
-}
-
-variable "PATH_TO_PRIVATE_KEY" {
-  type        = string
-  description = "Path to SSH private key"
-  default     = "levelup_key"
-}
-
 variable "INSTANCE_USERNAME" {
   type        = string
   description = "AWS instance username used for SSH connection"
@@ -49,13 +37,7 @@ variable "SG_DESCRIPTIONS" {
 variable "INSTANCE_NAME" {
   type        = string
   description = "The name of EC2 instance"
-  default     = "ELK Server"
-}
-
-variable "KEY_NAME" {
-  type        = string
-  description = "SSH key name"
-  default     = "tf-ssh-key"
+  default     = "ELK-Server"
 }
 
 variable "LD_NAME" {
