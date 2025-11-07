@@ -4,12 +4,6 @@ variable "AWS_REGION" {
   default     = "us-east-1"
 }
 
-variable "INSTANCE_USERNAME" {
-  type        = string
-  description = "AWS instance username used for SSH connection"
-  default     = "ubuntu"
-}
-
 variable "INSTANCE_TYPE" {
   type        = string
   description = "AWS Instance type"
@@ -38,6 +32,12 @@ variable "INSTANCE_NAME" {
   type        = string
   description = "The name of EC2 instance"
   default     = "ELK-Server"
+}
+
+variable "INSTANCE_SUBNET_ID" {
+  type        = string
+  description = "EC2 Instance Subnet ID"
+  default     = "subnet-04b04399210978637"
 }
 
 variable "LD_NAME" {
