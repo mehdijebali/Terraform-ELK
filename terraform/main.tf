@@ -32,18 +32,20 @@ data "aws_ami" "packer_ami" {
     values = [local.ami-name]
   }
 }
-
+module "ssm-role" {
+  source = "github.com/mehdijebali/terraform-modules//ssm-role?ref=v1.0.0"
+}
 module "instance" {
-  source = "./modules/instance"
+  source = "github.com/mehdijebali/terraform-modules//instance?ref=v1.0.0"
 
-  AVAILABILITY_ZONE      = var.AVAILABILITY_ZONE
-  SG_VPC_ID              = data.aws_vpc.default.id
-  SG_NAME                = var.SG_NAMES[0]
-  SG_DESCRIPTION         = var.SG_DESCRIPTIONS[0]
-  AMI_ID                 = data.aws_ami.packer_ami.id
-  INSTANCE_TYPE          = var.INSTANCE_TYPE
-  INSTANCE_NAME          = var.INSTANCE_NAME
-  VPC_SECURITY_GROUP_IDS = [aws_security_group.allow_elk.id]
+  SG_VPC_ID             = data.aws_vpc.default.id
+  USER_DATA             = module.ssm-role.user_data
+  INSTANCE_PROFILE_NAME = module.ssm-role.instance_profile_name
+  AMI_ID                = data.aws_ami.packer_ami.id
+  INSTANCE_SUBNET_ID    = var.INSTANCE_SUBNET_ID
+  INSTANCE_TYPE         = var.INSTANCE_TYPE
+  INSTANCE_NAME         = var.INSTANCE_NAME
+  AVAILABILITY_ZONE     = var.AVAILABILITY_ZONE
 
   depends_on = [aws_security_group.allow_elk]
 }
