@@ -1,0 +1,23 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "parserOpts": {
+          "headerPattern": "^.*\\s(?<type>\\w+)\\/(?<subject>.*)$",
+          "headerCorrespondence": ["type", "subject"]
+        },
+        "releaseRules": [
+          {"type": "Feat", "release": "minor"},
+          {"type": "Fix", "release": "patch"},
+          {"breaking": true, "release": "major"}
+        ]
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/github",
+    "@semantic-release/changelog",
+    "@semantic-release/git"
+  ]
+}
