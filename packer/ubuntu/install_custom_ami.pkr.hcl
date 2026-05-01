@@ -12,7 +12,7 @@ data "amazon-ami" "ubuntu" {
 
 source "amazon-ebs" "ubuntu" {
   ami_name      = "ubuntu-elk-pkr-${formatdate("YYYY-MM-DD-hhmmss", timestamp())}"
-  instance_type = "m4.large"
+  instance_type = "m7i-flex.large"
   region        = "us-east-1"
   source_ami    = "${data.amazon-ami.ubuntu.id}"
   ssh_username  = "ubuntu"
