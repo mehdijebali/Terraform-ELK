@@ -6,6 +6,9 @@ terraform {
       version = "~> 5.0"
     }
   }
+  backend "http" {
+    # Leave this block empty or with just the basic structure
+  }
 }
 
 provider "aws" {
