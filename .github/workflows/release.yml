@@ -1,0 +1,35 @@
+# This workflow orchestrates the Continuous Integration and Continuous Delivery (CI/CD)
+# for Terraform and Packer using GitHub Actions and Semantic Release.
+name: Semantic Release
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  
+  ###################################################################################
+  # JOB 1: SEMANTIC RELEASE & (Runs on Main Branch Push)
+  ###################################################################################
+  release_deploy_main:
+    name: Release
+    runs-on: ubuntu-latest
+    # Only run on push to main branch
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+        # Fetch history for Semantic Release to analyze commits
+        fetch-depth: 0 
+
+    - name: Semantic Release
+      id: semantic_release
+      uses: cycjimmy/semantic-release-action@v4
+      env:
+        # This token MUST have the 'repo' scope (or 'contents:write' and 'releases:write' for fine-grained PAT)
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+  

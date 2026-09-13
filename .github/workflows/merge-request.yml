@@ -1,0 +1,153 @@
+name: Validation
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+# Define environment variables used throughout the workflow
+env:
+  TF_WORKING_DIR: ./terraform  
+  PKR_WORKING_DIR: ./packer/centos    
+  ANSIBLE_WORKING_DIR: ./ansible 
+  AWS_REGION: us-east-1          
+
+jobs:
+
+  ###################################################################################
+  # JOB 1: TERRAFORM FORMAT 
+  ###################################################################################
+  terraform_format:
+    name: Terraform Format
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v6
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.13.x
+    
+    - name: Terraform Format Check (fmt)
+      id: fmt_tf
+      run: terraform fmt -check -recursive
+      working-directory: ${{ env.TF_WORKING_DIR }}
+      
+  ###################################################################################
+  # JOB 2: ANSIBLE LINT 
+  ###################################################################################
+  ansible_lint:
+    name: Ansible Lint
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v6
+
+    - name: Run Ansible Lint
+      uses: ansible/ansible-lint@v25
+      with:
+        working_directory: ${{ env.ANSIBLE_WORKING_DIR }}
+
+  ###################################################################################
+  # JOB 3: PACKER CHECKS 
+  ###################################################################################
+  packer_validate:
+    name: Packer Validate
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v6
+    
+    - name: Set up AWS credentials (required for some Terraform validation)
+      uses: aws-actions/configure-aws-credentials@v5
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+      
+    - name: Setup Packer
+      uses: hashicorp/setup-packer@v3
+      
+    - name: Packer Init
+      id: init_packer
+      run: find . -type f -name "*.pkr.hcl" -print0 | xargs -0 -I {} packer init "{}"
+      working-directory: ${{ env.PKR_WORKING_DIR }}
+      
+    - name: Packer Validate
+      id: validate_packer
+      run: find ${{ env.PKR_WORKING_DIR }} -type f -name "*.pkr.hcl" -print0 | xargs -0 -I {} packer validate "{}"
+  
+  ###################################################################################
+  # JOB 4: TERRAFORM VALIDATE
+  ###################################################################################
+  terraform_validate:
+    name: Terraform Validate
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v6
+      
+    - name: Set up AWS credentials (required for some Terraform validation)
+      uses: aws-actions/configure-aws-credentials@v5
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.13.x
+
+    - name: Terraform Init (Validation prerequisite)
+      id: init_tf
+      run: terraform init -upgrade -backend=false
+      working-directory: ${{ env.TF_WORKING_DIR }}
+      
+    - name: Terraform Validate
+      id: validate_tf
+      run: terraform validate
+      working-directory: ${{ env.TF_WORKING_DIR }}
+
+  ###################################################################################
+  # JOB 5: TERRAFORM LINT
+  ###################################################################################
+  terraform_lint:
+    name: Terraform Lint
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v6
+      
+    - name: Run TFLint
+      uses: terraform-linters/setup-tflint@v6
+      with:
+        working_directory: ${{ env.TF_WORKING_DIR }}
+
+  ###################################################################################
+  # JOB 6: TERRAFORM DOCS
+  ###################################################################################
+  terraform_docs:
+    name: Terraform Validate Docs
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v6
+        
+    - name: Generate Terraform Docs
+      uses: terraform-docs/gh-actions@v1
+      with:
+        working-dir: ${{ env.TF_WORKING_DIR }}
+        output-file: README.md
+        output-method: inject
+        
